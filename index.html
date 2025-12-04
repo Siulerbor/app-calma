@@ -3,1156 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CalmDown - Bienestar Integral con IA</title>
-    <!-- Carga de Tailwind CSS -->
+    <title>CalmDown - Tu Refugio Mental</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Carga de Tone.js para sonidos y música -->
     <script src="https://cdn.jsdelivr.net/npm/tone@14.9.14/build/Tone.min.js"></script>
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Configuración de la fuente Inter -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0f9ff 0%, #fffbeb 50%, #fefce8 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
         }
-        .card-shadow {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 5px 10px -5px rgba(0, 0, 0, 0.04);
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
-        .mood-bar {
-            height: 10px;
-            border-radius: 9999px;
-            transition: width 0.5s ease-out;
+        
+        .breathing-circle {
+            animation: breathe 4s ease-in-out infinite;
         }
-        .audio-controls button {
-            transition: all 0.2s ease;
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
         }
-        .audio-controls button:active {
-            transform: scale(0.95);
+        
+        .float {
+            animation: float 6s ease-in-out infinite;
         }
-        .technique-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
-        .technique-card:hover {
-            transform: translateY(-5px);
+        
+        .wave {
+            animation: wave 3s ease-in-out infinite;
         }
-        .active-technique {
-            border-color: #3b82f6;
-            background-color: #eff6ff;
+        
+        @keyframes wave {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
         }
-        .pulse-animation {
-            animation: pulse 2s infinite;
+        
+        .mood-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        @keyframes pulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
+        
+        .mood-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .chat-bubble {
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .pulse-soft {
+            animation: pulseSoft 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseSoft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .sound-wave {
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            margin: 0 2px;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            animation: soundWave 1s ease-in-out infinite;
+        }
+        
+        @keyframes soundWave {
+            0%, 100% { height: 10px; }
+            50% { height: 25px; }
+        }
+        
+        .tooltip {
+            position: relative;
+        }
+        
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
         }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-8">
+<body class="p-4 md:p-8">
 
-    <div id="app" class="max-w-6xl mx-auto">
+    <div id="app" class="max-w-7xl mx-auto">
         
-        <!-- Header con más funcionalidades -->
-        <header class="text-center mb-10 bg-white p-8 rounded-3xl shadow-2xl card-shadow border-b-4 border-blue-500">
-            <h1 class="text-6xl font-black text-blue-600 mb-2">✨ CalmDown 🧘‍♀️</h1>
-            <p class="text-xl font-medium text-emerald-500 mb-4">Tu espacio integral para la salud mental y el bienestar</p>
-            
-            <div class="flex flex-wrap justify-center gap-4 mt-6">
-                <div class="flex items-center space-x-2 bg-blue-50 px-4 py-2 rounded-full">
-                    <i class="fas fa-brain text-blue-500"></i>
-                    <span class="text-sm font-medium text-blue-700" id="current-technique">Selecciona una técnica</span>
-                </div>
-                
-                <div class="flex items-center space-x-2 bg-emerald-50 px-4 py-2 rounded-full">
-                    <i class="fas fa-music text-emerald-500"></i>
-                    <span class="text-sm font-medium text-emerald-700" id="current-sound">Sonido: Desactivado</span>
-                </div>
-                
-                <div id="user-info" class="text-sm text-gray-500 px-4 py-2 bg-gray-100 rounded-full">
-                    <!-- ID de usuario se mostrará aquí -->
-                </div>
+        <!-- Header con diseño más empático -->
+        <header class="text-center mb-8 glass-card p-8 rounded-3xl">
+            <div class="flex items-center justify-center gap-4 mb-4">
+                <div class="breathing-circle w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full"></div>
+                <h1 class="text-5xl font-bold gradient-text">CalmDown</h1>
+                <div class="breathing-circle w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full"></div>
             </div>
-            
-            <!-- Botón de inicio para audio -->
-            <button id="start-audio-btn" class="mt-6 px-6 py-2 bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-purple-600 text-white font-bold rounded-full text-base transition duration-300 shadow-md">
-                <i class="fas fa-play-circle mr-2"></i> Activar Audio y Música
+            <p class="text-lg text-gray-600 font-medium">Tu refugio personal de paz y bienestar</p>
+            <p class="text-sm text-gray-500 mt-2">Basado en neurociencia y psicología positiva</p>
+            <div id="user-info" class="text-xs text-gray-400 mt-3"></div>
+            <button id="start-audio-btn" class="mt-4 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-full transition duration-300 shadow-lg hidden">
+                🎵 Activar Experiencia de Audio
             </button>
         </header>
 
-        <!-- Contenedor Principal de la App -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            <!-- Columna Izquierda: Técnicas de relajación y música -->
-            <div class="lg:col-span-2 space-y-8">
-                
-                <!-- Card: Técnicas de Relajación -->
-                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-indigo-500">
-                    <h2 class="text-2xl font-extrabold text-indigo-600 mb-6 flex items-center">
-                        <i class="fas fa-spa mr-3 text-indigo-500"></i>
-                        Técnicas de Relajación Guiadas 🧘
-                    </h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div class="technique-card p-4 bg-blue-50 rounded-2xl border-2 border-blue-200" data-technique="respiración">
-                            <div class="flex items-center mb-2">
-                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                                    <i class="fas fa-wind text-blue-500"></i>
-                                </div>
-                                <h3 class="font-bold text-blue-700">Respiración</h3>
-                            </div>
-                            <p class="text-sm text-gray-600">Ejercicios de respiración controlada para calmar la ansiedad.</p>
-                        </div>
-                        
-                        <div class="technique-card p-4 bg-purple-50 rounded-2xl border-2 border-purple-200" data-technique="meditación">
-                            <div class="flex items-center mb-2">
-                                <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-3">
-                                    <i class="fas fa-eye text-purple-500"></i>
-                                </div>
-                                <h3 class="font-bold text-purple-700">Meditación</h3>
-                            </div>
-                            <p class="text-sm text-gray-600">Sesiones de meditación guiada para enfocar la mente.</p>
-                        </div>
-                        
-                        <div class="technique-card p-4 bg-emerald-50 rounded-2xl border-2 border-emerald-200" data-technique="relajación">
-                            <div class="flex items-center mb-2">
-                                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center mr-3">
-                                    <i class="fas fa-couch text-emerald-500"></i>
-                                </div>
-                                <h3 class="font-bold text-emerald-700">Relajación</h3>
-                            </div>
-                            <p class="text-sm text-gray-600">Relajación muscular progresiva y técnicas de calma.</p>
-                        </div>
-                        
-                        <div class="technique-card p-4 bg-amber-50 rounded-2xl border-2 border-amber-200" data-technique="visualización">
-                            <div class="flex items-center mb-2">
-                                <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mr-3">
-                                    <i class="fas fa-mountain text-amber-500"></i>
-                                </div>
-                                <h3 class="font-bold text-amber-700">Visualización</h3>
-                            </div>
-                            <p class="text-sm text-gray-600">Visualización profunda para alcanzar estados de paz interior.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Controles de duración -->
-                    <div class="mb-6">
-                        <h4 class="font-bold text-gray-700 mb-3">Duración de la sesión:</h4>
-                        <div class="flex flex-wrap gap-2">
-                            <button class="duration-btn px-4 py-2 rounded-full bg-gray-100 hover:bg-blue-100 border border-gray-300" data-minutes="3">3 min</button>
-                            <button class="duration-btn px-4 py-2 rounded-full bg-gray-100 hover:bg-blue-100 border border-gray-300" data-minutes="5">5 min</button>
-                            <button class="duration-btn px-4 py-2 rounded-full bg-gray-100 hover:bg-blue-100 border border-gray-300" data-minutes="10">10 min</button>
-                            <button class="duration-btn px-4 py-2 rounded-full bg-gray-100 hover:bg-blue-100 border border-gray-300" data-minutes="15">15 min</button>
-                        </div>
-                    </div>
-                    
-                    <button id="generate-exercise-btn" class="w-full py-4 px-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-black rounded-xl transition duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-200">
-                        <i class="fas fa-play mr-2"></i> Iniciar Sesión Guiada
-                    </button>
-                    
-                    <!-- Reproductor de audio -->
-                    <div id="exercise-output" class="mt-6 p-5 bg-indigo-50 rounded-xl border border-indigo-300 hidden">
-                        <h3 class="font-bold text-indigo-800 mb-4 flex items-center">
-                            <i class="fas fa-headphones mr-2"></i> Tu Sesión de Relajación
-                        </h3>
-                        
-                        <div class="flex items-center justify-between mb-4 audio-controls">
-                            <button id="play-btn" class="px-5 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-full">
-                                <i class="fas fa-play"></i> Reproducir
-                            </button>
-                            <button id="pause-btn" class="px-5 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-full">
-                                <i class="fas fa-pause"></i> Pausar
-                            </button>
-                            <button id="stop-btn" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full">
-                                <i class="fas fa-stop"></i> Detener
-                            </button>
-                        </div>
-                        
-                        <div class="flex items-center space-x-4 mb-4">
-                            <span class="text-sm text-gray-600" id="current-time">0:00</span>
-                            <div class="flex-grow bg-gray-200 rounded-full h-2">
-                                <div id="progress-bar" class="bg-indigo-500 h-2 rounded-full" style="width: 0%"></div>
-                            </div>
-                            <span class="text-sm text-gray-600" id="total-time">0:00</span>
-                        </div>
-                        
-                        <p id="exercise-text" class="text-sm text-gray-700 whitespace-pre-wrap mt-4 p-4 bg-white rounded-lg border border-gray-200"></p>
-                    </div>
-
-                    <div id="loading-indicator" class="mt-4 text-center hidden">
-                        <div class="flex flex-col items-center justify-center space-y-3 text-indigo-700">
-                            <div class="pulse-animation">
-                                <i class="fas fa-spinner fa-spin text-3xl"></i>
-                            </div>
-                            <span class="text-sm font-semibold">DeepSeek está preparando tu sesión personalizada...</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Card: Música y Sonidos Ambientales -->
-                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-teal-500">
-                    <h2 class="text-2xl font-extrabold text-teal-600 mb-6 flex items-center">
-                        <i class="fas fa-music mr-3 text-teal-500"></i>
-                        Música y Sonidos para la Relajación 🎵
-                    </h2>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                        <div class="sound-card p-4 bg-teal-50 rounded-2xl border-2 border-teal-200 text-center" data-sound="lluvia">
-                            <i class="fas fa-cloud-rain text-2xl text-teal-500 mb-2"></i>
-                            <p class="font-bold text-teal-700">Lluvia</p>
-                        </div>
-                        
-                        <div class="sound-card p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 text-center" data-sound="olas">
-                            <i class="fas fa-water text-2xl text-blue-500 mb-2"></i>
-                            <p class="font-bold text-blue-700">Olas</p>
-                        </div>
-                        
-                        <div class="sound-card p-4 bg-green-50 rounded-2xl border-2 border-green-200 text-center" data-sound="bosque">
-                            <i class="fas fa-tree text-2xl text-green-500 mb-2"></i>
-                            <p class="font-bold text-green-700">Bosque</p>
-                        </div>
-                        
-                        <div class="sound-card p-4 bg-purple-50 rounded-2xl border-2 border-purple-200 text-center" data-sound="clásica">
-                            <i class="fas fa-guitar text-2xl text-purple-500 mb-2"></i>
-                            <p class="font-bold text-purple-700">Clásica</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <p class="font-bold text-gray-700 mb-1">Volumen:</p>
-                            <input type="range" id="volume-control" min="0" max="100" value="50" class="w-48">
-                        </div>
-                        
-                        <div class="text-right">
-                            <p class="font-bold text-gray-700 mb-1">Sonido activo:</p>
-                            <p id="active-sound-name" class="text-teal-600 font-medium">Ninguno</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex space-x-4">
-                        <button id="play-sound-btn" class="flex-1 py-3 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-xl transition duration-300">
-                            <i class="fas fa-play mr-2"></i> Reproducir Sonido
-                        </button>
-                        <button id="stop-sound-btn" class="flex-1 py-3 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-xl transition duration-300">
-                            <i class="fas fa-stop mr-2"></i> Detener Sonido
-                        </button>
-                    </div>
-                </div>
+        <!-- Estado Mental Actual - Nuevo componente empático -->
+        <div class="glass-card p-6 rounded-3xl mb-8">
+            <h2 class="text-2xl font-bold text-center mb-4 gradient-text">¿Cómo te sientes en este momento?</h2>
+            <p class="text-center text-gray-600 text-sm mb-6">Reconocer tus emociones es el primer paso hacia el bienestar</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="quickMoodLog('Tranquilo')" class="mood-btn glass-card p-6 rounded-2xl text-center">
+                    <div class="text-5xl mb-2">😌</div>
+                    <p class="font-semibold text-gray-700">Tranquilo</p>
+                    <p class="text-xs text-gray-500">En paz</p>
+                </button>
+                <button onclick="quickMoodLog('Feliz')" class="mood-btn glass-card p-6 rounded-2xl text-center">
+                    <div class="text-5xl mb-2">😊</div>
+                    <p class="font-semibold text-gray-700">Feliz</p>
+                    <p class="text-xs text-gray-500">Contento</p>
+                </button>
+                <button onclick="quickMoodLog('Ansioso')" class="mood-btn glass-card p-6 rounded-2xl text-center">
+                    <div class="text-5xl mb-2">😰</div>
+                    <p class="font-semibold text-gray-700">Ansioso</p>
+                    <p class="text-xs text-gray-500">Preocupado</p>
+                </button>
+                <button onclick="quickMoodLog('Estresado')" class="mood-btn glass-card p-6 rounded-2xl text-center">
+                    <div class="text-5xl mb-2">😓</div>
+                    <p class="font-semibold text-gray-700">Estresado</p>
+                    <p class="text-xs text-gray-500">Abrumado</p>
+                </button>
             </div>
-
-            <!-- Columna Derecha: Seguimiento y análisis -->
-            <div class="space-y-8">
-                
-                <!-- Card: Diario de Ánimo -->
-                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-orange-500">
-                    <h2 class="text-2xl font-extrabold text-orange-600 mb-4 flex items-center">
-                        <i class="fas fa-heart mr-3 text-orange-500"></i>
-                        Diario de Ánimo de Hoy 🧡
-                    </h2>
-                    
-                    <label for="mood-select" class="block text-sm font-semibold text-gray-700 mb-2">¿Cómo te sientes hoy?</label>
-                    <select id="mood-select" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-orange-400 focus:border-orange-400 mb-4 transition duration-150">
-                        <option value="Excelente">🥳 Excelente (¡Me siento genial!)</option>
-                        <option value="Bien">😊 Bien (Todo en orden)</option>
-                        <option value="Neutral">😐 Neutral (Normal, sin mucho que decir)</option>
-                        <option value="Ansioso">😟 Ansioso (Un poco inquieto)</option>
-                        <option value="Estresado">😓 Estresado (Mucha presión)</option>
-                        <option value="Triste">😔 Triste (Necesito un abrazo)</option>
-                        <option value="Irritable">😠 Irritable (Me siento frustrado)</option>
-                    </select>
-
-                    <label for="mood-notes" class="block text-sm font-semibold text-gray-700 mb-2">Notas del día (opcional):</label>
-                    <textarea id="mood-notes" rows="3" placeholder="Ej: Hoy logré completar mi tarea difícil, me siento orgulloso..." class="w-full p-3 border border-gray-300 rounded-xl focus:ring-orange-400 focus:border-orange-400 transition duration-150"></textarea>
-
-                    <button id="save-mood-btn" class="w-full py-3 mt-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl transition duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-orange-200">
-                        <i class="fas fa-save mr-2"></i> Guardar Registro
-                    </button>
-                    <p id="mood-status" class="text-sm text-center mt-2 font-bold"></p>
-                </div>
-
-                <!-- Card: Agente de Conversación DeepSeek -->
-                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-blue-500">
-                    <h2 class="text-2xl font-extrabold text-blue-600 mb-4 flex items-center">
-                        <i class="fas fa-robot mr-3 text-blue-500"></i>
-                        Conversa con DeepSeek 🤖
-                    </h2>
-                    <p class="text-gray-600 mb-4">Habla con nuestro agente de IA sobre tus pensamientos, emociones o cualquier cosa que necesites.</p>
-                    
-                    <div class="mb-4">
-                        <textarea id="ai-chat-input" rows="3" placeholder="¿Qué te gustaría compartir o preguntar hoy?" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-blue-400 focus:border-blue-400 transition duration-150"></textarea>
-                    </div>
-                    
-                    <button id="chat-with-ai-btn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-black rounded-xl transition duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-200">
-                        <i class="fas fa-comment mr-2"></i> Conversar con DeepSeek
-                    </button>
-                    
-                    <div id="ai-chat-output" class="mt-4 p-5 bg-blue-50 rounded-xl border border-blue-300 hidden">
-                        <h3 class="font-bold text-blue-800 mb-2">DeepSeek responde:</h3>
-                        <p id="ai-chat-text" class="text-gray-700 whitespace-pre-wrap"></p>
-                    </div>
-
-                    <div id="chat-loading-indicator" class="mt-4 text-center hidden">
-                        <div class="flex items-center justify-center space-x-2 text-blue-700">
-                            <i class="fas fa-spinner fa-spin"></i>
-                            <span class="text-sm font-semibold">DeepSeek está pensando...</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Card: Resumen de Ánimo -->
-                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-emerald-500">
-                    <h2 class="text-2xl font-extrabold text-emerald-600 mb-4 flex items-center">
-                        <i class="fas fa-chart-line mr-3 text-emerald-500"></i>
-                        Tu Progreso Emocional 📈
-                    </h2>
-                    <p class="text-sm text-gray-500 mb-4">Tendencias de tus estados de ánimo recientes:</p>
-                    <div id="mood-chart-container" class="space-y-4 p-2 bg-emerald-50 rounded-lg min-h-[200px] flex items-center justify-center">
-                        <p class="text-gray-400 text-sm">Registra tu ánimo para ver estadísticas.</p>
-                    </div>
-                    
-                    <button id="analyze-mood-btn" class="w-full py-3 mt-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition duration-300">
-                        <i class="fas fa-chart-bar mr-2"></i> Ver Análisis Detallado
-                    </button>
-                </div>
-
-                <!-- Card: Historial de Sesiones -->
-                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-purple-500">
-                    <h2 class="text-2xl font-extrabold text-purple-600 mb-4 flex items-center">
-                        <i class="fas fa-history mr-3 text-purple-500"></i>
-                        Tus Sesiones Recientes 🕒
-                    </h2>
-                    <div id="session-history-list" class="space-y-3 max-h-60 overflow-y-auto">
-                        <div class="p-3 bg-purple-50 rounded-lg">
-                            <p class="font-bold text-purple-700">Nueva sesión</p>
-                            <p class="text-xs text-gray-500">Comienza tu primera sesión de relajación</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
+            <div id="quick-mood-feedback" class="mt-4 text-center text-sm font-medium hidden"></div>
         </div>
-    </div>
 
-    <!-- Módulos de Firebase y Lógica -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, doc, addDoc, onSnapshot, collection, query, orderBy, serverTimestamp, setDoc, updateDoc, limit, getDocs
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        <!-- Grid Principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        // ----------------------------------------------------
-        // 1. CONFIGURACIÓN DE AUDIO (TONE.JS PARA MÚSICA Y SONIDOS)
-        // ----------------------------------------------------
-        let audioContextStarted = false;
-        let currentSound = null;
-        let currentVolume = 0.5;
-        let currentAudioPlayer = null;
-        let isPlaying = false;
-        let currentDuration = 5; // minutos por defecto
-        let currentTechnique = "respiración";
-        
-        // Configuración de sintetizadores para sonidos ambientales
-        const soundGenerators = {
-            'lluvia': null,
-            'olas': null,
-            'bosque': null,
-            'clásica': null
-        };
-        
-        // Sonidos de feedback
-        const successSynth = new Tone.MembraneSynth().toDestination();
-        const loadingSynth = new Tone.DuoSynth({
-            vibratoAmount: 0.5, vibratoRate: 5, harmonicity: 1.5,
-            voice0: { volume: -10, envelope: { attack: 0.01, decay: 0.1, sustain: 0.2, release: 0.5 } },
-            voice1: { volume: -10, envelope: { attack: 0.01, decay: 0.1, sustain: 0.2, release: 0.5 } }
-        }).toDestination();
-        
-        function playSuccess() {
-            if (audioContextStarted) {
-                successSynth.triggerAttackRelease("G4", "8n");
-                successSynth.triggerAttackRelease("C5", "8n", "+0.2");
-            }
-        }
-        
-        function playLoadingStart() {
-            if (audioContextStarted) {
-                loadingSynth.triggerAttackRelease("C3", "4n");
-            }
-        }
-
-        function playError() {
-            if (audioContextStarted) {
-                successSynth.triggerAttackRelease("C2", "8n");
-                successSynth.triggerAttackRelease("G#1", "8n", "+0.2");
-            }
-        }
-        
-        // Crear sonidos ambientales
-        function createRainSound() {
-            const noise = new Tone.Noise("pink").start();
-            const filter = new Tone.Filter(800, "lowpass").toDestination();
-            const volume = new Tone.Volume(-20).connect(filter);
-            noise.connect(volume);
-            return { noise, filter, volume };
-        }
-        
-        function createWaveSound() {
-            const osc = new Tone.Oscillator(60, "sine").start();
-            const lfo = new Tone.LFO(0.1, 0.8, 1).start();
-            const gain = new Tone.Gain().toDestination();
-            const volume = new Tone.Volume(-15).connect(gain);
-            
-            osc.connect(volume);
-            lfo.connect(gain.gain);
-            
-            return { osc, lfo, volume };
-        }
-        
-        function createForestSound() {
-            const noise = new Tone.Noise("brown").start();
-            const filter = new Tone.Filter(1200, "lowpass").toDestination();
-            const volume = new Tone.Volume(-25).connect(filter);
-            noise.connect(volume);
-            
-            // Agregar algunos pájaros
-            const birdInterval = setInterval(() => {
-                if (audioContextStarted) {
-                    const bird = new Tone.Oscillator(1200 + Math.random() * 800, "sine").start();
-                    const env = new Tone.AmplitudeEnvelope({
-                        attack: 0.01,
-                        decay: 0.1,
-                        sustain: 0.1,
-                        release: 0.2
-                    }).toDestination();
-                    
-                    bird.connect(env);
-                    env.triggerAttackRelease(0.1 + Math.random() * 0.2);
-                    
-                    setTimeout(() => bird.dispose(), 500);
-                }
-            }, 3000);
-            
-            return { noise, filter, volume, interval: birdInterval };
-        }
-        
-        function createClassicalMusic() {
-            // Simulación simple de música clásica relajante
-            const synth = new Tone.PolySynth(Tone.Synth, {
-                oscillator: { type: "sine" },
-                envelope: { attack: 0.1, decay: 0.2, sustain: 0.5, release: 1 }
-            }).toDestination();
-            
-            const volume = new Tone.Volume(-10).connect(synth);
-            
-            // Patrón simple y relajante
-            const notes = ["C4", "E4", "G4", "C5", "G4", "E4", "C4"];
-            let noteIndex = 0;
-            
-            const playNote = () => {
-                if (audioContextStarted) {
-                    synth.triggerAttackRelease(notes[noteIndex], "2n");
-                    noteIndex = (noteIndex + 1) % notes.length;
-                }
-            };
-            
-            const interval = setInterval(playNote, 2000);
-            
-            return { synth, volume, interval };
-        }
-        
-        function playAmbientSound(soundType) {
-            stopAllSounds();
-            
-            if (!audioContextStarted) {
-                document.getElementById('current-sound').textContent = "Activa el audio primero";
-                return;
-            }
-            
-            let soundGenerator;
-            
-            switch(soundType) {
-                case 'lluvia':
-                    soundGenerator = createRainSound();
-                    break;
-                case 'olas':
-                    soundGenerator = createWaveSound();
-                    break;
-                case 'bosque':
-                    soundGenerator = createForestSound();
-                    break;
-                case 'clásica':
-                    soundGenerator = createClassicalMusic();
-                    break;
-                default:
-                    return;
-            }
-            
-            soundGenerators[soundType] = soundGenerator;
-            currentSound = soundType;
-            
-            // Ajustar volumen
-            if (soundGenerator.volume) {
-                soundGenerator.volume.volume.value = Tone.gainToDb(currentVolume);
-            }
-            
-            document.getElementById('current-sound').textContent = `Sonido: ${soundType.charAt(0).toUpperCase() + soundType.slice(1)}`;
-            document.getElementById('active-sound-name').textContent = soundType.charAt(0).toUpperCase() + soundType.slice(1);
-            
-            // Resaltar tarjeta activa
-            document.querySelectorAll('.sound-card').forEach(card => {
-                card.classList.remove('border-blue-500', 'bg-blue-100');
-            });
-            document.querySelector(`.sound-card[data-sound="${soundType}"]`).classList.add('border-blue-500', 'bg-blue-100');
-            
-            playSuccess();
-        }
-        
-        function stopAllSounds() {
-            Object.keys(soundGenerators).forEach(type => {
-                if (soundGenerators[type]) {
-                    // Detener intervalos
-                    if (soundGenerators[type].interval) {
-                        clearInterval(soundGenerators[type].interval);
-                    }
-                    
-                    // Detener y desconectar generadores de sonido
-                    if (soundGenerators[type].noise) {
-                        soundGenerators[type].noise.stop();
-                        soundGenerators[type].noise.dispose();
-                    }
-                    if (soundGenerators[type].osc) {
-                        soundGenerators[type].osc.stop();
-                        soundGenerators[type].osc.dispose();
-                    }
-                    if (soundGenerators[type].synth) {
-                        soundGenerators[type].synth.dispose();
-                    }
-                    
-                    soundGenerators[type] = null;
-                }
-            });
-            
-            if (currentSound) {
-                document.querySelector(`.sound-card[data-sound="${currentSound}"]`).classList.remove('border-blue-500', 'bg-blue-100');
-                currentSound = null;
-            }
-            
-            document.getElementById('current-sound').textContent = "Sonido: Desactivado";
-            document.getElementById('active-sound-name').textContent = "Ninguno";
-        }
-        
-        function updateVolume(value) {
-            currentVolume = value / 100;
-            
-            if (currentSound && soundGenerators[currentSound] && soundGenerators[currentSound].volume) {
-                soundGenerators[currentSound].volume.volume.value = Tone.gainToDb(currentVolume);
-            }
-            
-            if (currentAudioPlayer) {
-                currentAudioPlayer.volume = currentVolume;
-            }
-        }
-
-        document.getElementById('start-audio-btn').addEventListener('click', async () => {
-            if (Tone.context.state !== 'running') {
-                await Tone.start();
-                audioContextStarted = true;
-                document.getElementById('start-audio-btn').innerHTML = '<i class="fas fa-check-circle mr-2"></i> Audio Activado';
-                document.getElementById('start-audio-btn').classList.remove('from-blue-400', 'to-purple-500');
-                document.getElementById('start-audio-btn').classList.add('from-green-400', 'to-emerald-500');
-                playSuccess();
-            }
-        });
-
-        if (Tone.context.state !== 'running') {
-            document.getElementById('start-audio-btn').classList.remove('hidden');
-        } else {
-            audioContextStarted = true;
-            document.getElementById('start-audio-btn').innerHTML = '<i class="fas fa-check-circle mr-2"></i> Audio Activado';
-            document.getElementById('start-audio-btn').classList.remove('from-blue-400', 'to-purple-500');
-            document.getElementById('start-audio-btn').classList.add('from-green-400', 'to-emerald-500');
-        }
-        
-        // ----------------------------------------------------
-        // 2. CONFIGURACIÓN DE FIRESTORE
-        // ----------------------------------------------------
-        const apiKey = ""; 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'calmdown-app-v2';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db;
-        let auth;
-        let userId = null;
-        let isAuthReady = false;
-
-        if (firebaseConfig) {
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                    document.getElementById('user-info').textContent = `Usuario: ${userId.substring(0, 8)}...`;
-                    isAuthReady = true;
-                    setupFirestoreListeners();
-                } else {
-                    document.getElementById('user-info').textContent = 'Conectando...';
-                    try {
-                        if (initialAuthToken) {
-                            await signInWithCustomToken(auth, initialAuthToken);
-                        } else {
-                            await signInAnonymously(auth);
-                        }
-                    } catch (error) {
-                        console.error("Error de autenticación:", error);
-                        document.getElementById('user-info').textContent = 'Error de conexión';
-                        playError();
-                    }
-                }
-            });
-        } else {
-            document.getElementById('user-info').textContent = 'Modo demo (sin Firebase)';
-            isAuthReady = true;
-        }
-
-        // ----------------------------------------------------
-        // 3. FUNCIONES DE UTILIDAD
-        // ----------------------------------------------------
-        const MAX_RETRIES = 3;
-
-        async function fetchWithRetry(url, options, retries = 0) {
-            try {
-                const response = await fetch(url, options);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response;
-            } catch (error) {
-                if (retries < MAX_RETRIES) {
-                    const delay = Math.pow(2, retries) * 1000;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    return fetchWithRetry(url, options, retries + 1);
-                }
-                throw error;
-            }
-        }
-
-        // ----------------------------------------------------
-        // 4. GENERACIÓN DE EJERCICIOS CON DEEPSEEK
-        // ----------------------------------------------------
-        async function generateExercise() {
-            const btn = document.getElementById('generate-exercise-btn');
-            const loading = document.getElementById('loading-indicator');
-            const outputDiv = document.getElementById('exercise-output');
-            const outputText = document.getElementById('exercise-text');
-
-            if (!currentTechnique) {
-                alert("Por favor, selecciona una técnica de relajación primero.");
-                return;
-            }
-
-            btn.disabled = true;
-            outputDiv.classList.add('hidden');
-            loading.classList.remove('hidden');
-            outputText.textContent = '';
-            
-            // Detener audio anterior
-            if (currentAudioPlayer) {
-                currentAudioPlayer.pause();
-                currentAudioPlayer = null;
-            }
-            
-            // Resetear controles de audio
-            document.getElementById('current-time').textContent = "0:00";
-            document.getElementById('progress-bar').style.width = "0%";
-            isPlaying = false;
-            
-            playLoadingStart();
-
-            // Mapear técnicas a prompts específicos
-            const techniquePrompts = {
-                "respiración": `Genera un ejercicio de respiración guiada de ${currentDuration} minutos para reducir la ansiedad y el estrés. Incluye instrucciones claras para inhalar, retener y exhalar. Usa un tono calmado y profesional.`,
-                "meditación": `Crea una meditación guiada de ${currentDuration} minutos para enfocar la mente y alcanzar un estado de paz interior. Incluye instrucciones para enfocar la atención en la respiración o en sensaciones corporales.`,
-                "relajación": `Diseña una sesión de relajación muscular progresiva de ${currentDuration} minutos. Guía al usuario a través de diferentes grupos musculares, tensando y relajando cada uno. Usa un ritmo pausado.`,
-                "visualización": `Genera una visualización guiada de ${currentDuration} minutos para transportar al usuario a un lugar tranquilo y seguro. Describe detalles sensoriales (vista, sonidos, olores, sensaciones).`
-            };
-
-            const systemPrompt = `Eres un terapeuta de bienestar especializado en técnicas de relajación y mindfulness. Tu tarea es generar ejercicios guiados que sean efectivos, seguros y fáciles de seguir.`;
-            
-            const userPrompt = techniquePrompts[currentTechnique] || `Genera un ejercicio de relajación de ${currentDuration} minutos.`;
-
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
-            try {
-                // 1. Generar el texto del ejercicio
-                const textResponse = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: userPrompt }] }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] },
-                        generationConfig: {
-                            temperature: 0.7,
-                            maxOutputTokens: 1000
-                        }
-                    })
-                });
-                
-                const textResult = await textResponse.json();
-                const text = textResult.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (!text) {
-                    throw new Error("No se pudo generar el texto del ejercicio.");
-                }
-                
-                // 2. Convertir texto a audio usando Web Speech API (fallback)
-                outputText.textContent = text;
-                outputDiv.classList.remove('hidden');
-                
-                // Configurar controles de audio
-                setupAudioControls(text);
-                
-                // 3. Guardar sesión en historial
-                saveSessionToHistory(currentTechnique, currentDuration);
-                
-                playSuccess();
-
-            } catch (error) {
-                console.error("Error en la generación de IA:", error);
-                outputText.textContent = `Error al generar la guía. Detalles: ${error.message}. Intenta de nuevo.`;
-                outputDiv.classList.remove('hidden');
-                playError();
-            } finally {
-                btn.disabled = false;
-                loading.classList.add('hidden');
-            }
-        }
-        
-        function setupAudioControls(text) {
-            // Usar Web Speech API como fallback
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'es-ES';
-                utterance.rate = 0.9;
-                utterance.pitch = 1;
-                utterance.volume = currentVolume;
-                
-                currentAudioPlayer = {
-                    utterance: utterance,
-                    startTime: null,
-                    duration: currentDuration * 60 * 1000, // convertir a ms
-                    play: function() {
-                        window.speechSynthesis.speak(this.utterance);
-                        this.startTime = Date.now();
-                        isPlaying = true;
-                        updateProgressBar();
-                    },
-                    pause: function() {
-                        window.speechSynthesis.pause();
-                        isPlaying = false;
-                    },
-                    resume: function() {
-                        window.speechSynthesis.resume();
-                        isPlaying = true;
-                        updateProgressBar();
-                    },
-                    stop: function() {
-                        window.speechSynthesis.cancel();
-                        isPlaying = false;
-                        document.getElementById('current-time').textContent = "0:00";
-                        document.getElementById('progress-bar').style.width = "0%";
-                    }
-                };
-                
-                // Configurar eventos de los botones
-                document.getElementById('play-btn').onclick = () => {
-                    if (!isPlaying) {
-                        if (window.speechSynthesis.speaking && window.speechSynthesis.paused) {
-                            currentAudioPlayer.resume();
-                        } else {
-                            currentAudioPlayer.play();
-                        }
-                    }
-                };
-                
-                document.getElementById('pause-btn').onclick = () => {
-                    if (isPlaying) {
-                        currentAudioPlayer.pause();
-                    }
-                };
-                
-                document.getElementById('stop-btn').onclick = () => {
-                    currentAudioPlayer.stop();
-                };
-                
-                // Configurar tiempo total
-                document.getElementById('total-time').textContent = `${currentDuration}:00`;
-                
-                // Actualizar barra de progreso
-                function updateProgressBar() {
-                    if (isPlaying && currentAudioPlayer.startTime) {
-                        const elapsed = Date.now() - currentAudioPlayer.startTime;
-                        const progress = Math.min(elapsed / currentAudioPlayer.duration, 1);
-                        
-                        const minutes = Math.floor(elapsed / 60000);
-                        const seconds = Math.floor((elapsed % 60000) / 1000);
-                        document.getElementById('current-time').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                        
-                        document.getElementById('progress-bar').style.width = `${progress * 100}%`;
-                        
-                        if (progress < 1) {
-                            requestAnimationFrame(updateProgressBar);
-                        } else {
-                            isPlaying = false;
-                        }
-                    }
-                }
-            } else {
-                document.getElementById('exercise-text').innerHTML += `<br><br><span class="text-red-500 text-sm">Nota: Tu navegador no soporta síntesis de voz. Lee el texto en voz alta o usa auriculares.</span>`;
-            }
-        }
-        
-        // ----------------------------------------------------
-        // 5. AGENTE DE CONVERSACIÓN DEEPSEEK
-        // ----------------------------------------------------
-        async function chatWithAI() {
-            const input = document.getElementById('ai-chat-input').value.trim();
-            const btn = document.getElementById('chat-with-ai-btn');
-            const loading = document.getElementById('chat-loading-indicator');
-            const outputDiv = document.getElementById('ai-chat-output');
-            const outputText = document.getElementById('ai-chat-text');
-
-            if (!input) {
-                alert("Por favor, escribe algo para conversar con DeepSeek.");
-                return;
-            }
-
-            btn.disabled = true;
-            outputDiv.classList.add('hidden');
-            loading.classList.remove('hidden');
-            outputText.textContent = '';
-            
-            playLoadingStart();
-
-            const systemPrompt = `Eres DeepSeek, un asistente de IA especializado en salud mental y bienestar emocional. Eres empático, comprensivo y ofreces apoyo emocional sin juzgar. Tu objetivo es ayudar a las personas a procesar sus emociones, encontrar claridad y desarrollar estrategias de autocuidado. Siempre respondes en español.`;
-            
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: input }] }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] },
-                        generationConfig: {
-                            temperature: 0.8,
-                            maxOutputTokens: 800
-                        }
-                    })
-                });
-                
-                const result = await response.json();
-                const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Lo siento, no pude procesar tu mensaje. ¿Podrías intentarlo de nuevo?";
-
-                outputText.textContent = text;
-                outputDiv.classList.remove('hidden');
-                playSuccess();
-                
-                // Limpiar input
-                document.getElementById('ai-chat-input').value = '';
-                
-                // Guardar conversación en historial
-                saveConversationToHistory(input, text);
-
-            } catch (error) {
-                console.error("Error en el chat con IA:", error);
-                outputText.textContent = "Error al conectar con DeepSeek. Por favor, intenta de nuevo más tarde.";
-                outputDiv.classList.remove('hidden');
-                playError();
-            } finally {
-                btn.disabled = false;
-                loading.classList.add('hidden');
-            }
-        }
-
-        // ----------------------------------------------------
-        // 6. FIRESTORE FUNCTIONS
-        // ----------------------------------------------------
-        function getMoodCollectionRef() {
-            if (!userId) return null;
-            const collectionPath = `artifacts/${appId}/users/${userId}/mood_entries`;
-            return collection(db, collectionPath);
-        }
-
-        function getSessionsCollectionRef() {
-            if (!userId) return null;
-            const collectionPath = `artifacts/${appId}/users/${userId}/sessions`;
-            return collection(db, collectionPath);
-        }
-
-        function getConversationsCollectionRef() {
-            if (!userId) return null;
-            const collectionPath = `artifacts/${appId}/users/${userId}/conversations`;
-            return collection(db, collectionPath);
-        }
-
-        async function saveMoodEntry() {
-            const moodRef = getMoodCollectionRef();
-            const statusText = document.getElementById('mood-status');
-
-            if (!moodRef) {
-                statusText.textContent = 'Error: No se puede guardar sin sesión activa.';
-                statusText.classList.remove('text-emerald-500');
-                statusText.classList.add('text-red-500');
-                playError();
-                return;
-            }
-
-            const mood = document.getElementById('mood-select').value;
-            const notes = document.getElementById('mood-notes').value;
-
-            try {
-                await addDoc(moodRef, {
-                    mood: mood,
-                    notes: notes,
-                    timestamp: serverTimestamp(),
-                    technique: currentTechnique
-                });
-                statusText.textContent = '¡Ánimo guardado exitosamente! ✅';
-                statusText.classList.remove('text-red-500');
-                statusText.classList.add('text-emerald-500');
-                document.getElementById('mood-notes').value = '';
-                playSuccess();
-                setTimeout(() => statusText.textContent = '', 3000);
-            } catch (e) {
-                console.error("Error al guardar estado de ánimo: ", e);
-                statusText.textContent = 'Error al guardar.';
-                statusText.classList.add('text-red-500');
-                playError();
-            }
-        }
-
-        async function saveSessionToHistory(technique, duration) {
-            const sessionsRef = getSessionsCollectionRef();
-            if (!sessionsRef) return;
-
-            try {
-                await addDoc(sessionsRef, {
-                    technique: technique,
-                    duration: duration,
-                    timestamp: serverTimestamp(),
-                    date: new Date().toISOString().split('T')[0]
-                });
-            } catch (e) {
-                console.error("Error al guardar sesión: ", e);
-            }
-        }
-
-        async function saveConversationToHistory(userInput, aiResponse) {
-            const convRef = getConversationsCollectionRef();
-            if (!convRef) return;
-
-            try {
-                await addDoc(convRef, {
-                    userInput: userInput,
-                    aiResponse: aiResponse,
-                    timestamp: serverTimestamp()
-                });
-            } catch (e) {
-                console.error("Error al guardar conversación: ", e);
-            }
-        }
-
-        // 7. FUNCIONES DE RENDERIZADO
-        const moodColors = {
-            'Excelente': 'bg-lime-500', 'Bien': 'bg-green-500', 'Neutral': 'bg-gray-400',
-            'Ansioso': 'bg-yellow-400', 'Estresado': 'bg-orange-500', 'Triste': 'bg-sky-500',
-            'Irritable': 'bg-red-500',
-        };
-        
-        const moodEmojis = {
-            'Excelente': '🥳', 'Bien': '😊', 'Neutral': '😐', 'Ansioso': '😟',
-            'Estresado': '😓', 'Triste': '😔', 'Irritable': '😠',
-        };
-
-        function renderMoodChart(moodCounts) {
-            const container = document.getElementById('mood-chart-container');
-            container.innerHTML = '';
-            
-            const total = Object.values(moodCounts).reduce((sum, count) => sum + count, 0);
-
-            if (total === 0) {
-                container.innerHTML = '<p class="text-gray-400 text-sm p-2">Registra tu ánimo para ver estadísticas.</p>';
-                return;
-            }
-
-            const sortedMoods = Object.entries(moodCounts)
-                .sort(([, a], [, b]) => b - a)
-                .filter(([, count]) => count > 0);
-            
-            sortedMoods.forEach(([mood, count]) => {
-                const percentage = (count / total) * 100;
-                const colorClass = moodColors[mood] || 'bg-gray-400';
-                const emoji = moodEmojis[mood] || '❓';
-                
-                const item = document.createElement('div');
-                item.className = 'flex items-center space-x-2';
-                item.innerHTML = `
-                    <span class="text-sm font-semibold w-1/4">${emoji} ${mood}</span>
-                    <div class="flex-grow bg-gray-200 rounded-full">
-                        <div class="mood-bar ${colorClass}" style="width: ${percentage.toFixed(1)}%;"></div>
+            <!-- Columna 1: Respira Conmigo -->
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🫁</span>
                     </div>
-                    <span class="text-xs text-gray-600">${count}</span>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        function setupFirestoreListeners() {
-            if (!isAuthReady || !userId) return;
-
-            const moodRef = getMoodCollectionRef();
-            const sessionsRef = getSessionsCollectionRef();
-            const historyList = document.getElementById('session-history-list');
-
-            // Listener para el Historial de Ánimo
-            const qMood = query(moodRef, orderBy("timestamp", "desc"), limit(10));
-            onSnapshot(qMood, (snapshot) => {
-                const moodCounts = {};
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">Respira Conmigo</h3>
+                        <p class="text-xs text-gray-500">Activa tu sistema nervioso parasimpático</p>
+                    </div>
+                </div>
                 
-                snapshot.docs.forEach(doc => { 
-                    const data = doc.data();
-                    moodCounts[data.mood] = (moodCounts[data.mood] || 0) + 1;
-                });
+                <div class="relative h-64 flex items-center justify-center mb-4">
+                    <div id="breathing-guide" class="absolute w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full opacity-70"></div>
+                    <p id="breathing-text" class="text-2xl font-bold text-gray-700 z-10 relative">Inhala</p>
+                </div>
                 
-                renderMoodChart(moodCounts);
-            });
-
-            // Listener para Historial de Sesiones
-            const qSessions = query(sessionsRef, orderBy("timestamp", "desc"), limit(5));
-            onSnapshot(qSessions, (snapshot) => {
-                historyList.innerHTML = '';
+                <button id="start-breathing-btn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-xl shadow-lg transition">
+                    Comenzar Ejercicio
+                </button>
                 
-                if (snapshot.empty) {
-                    historyList.innerHTML = '<p class="text-gray-500 p-2">Aún no has completado sesiones.</p>';
-                    return;
-                }
+                <div class="mt-4 p-4 bg-blue-50 rounded-xl">
+                    <p class="text-xs text-blue-800 leading-relaxed">
+                        <strong>Beneficio:</strong> La respiración consciente reduce el cortisol (hormona del estrés) hasta un 30% en solo 5 minutos.
+                    </p>
+                </div>
+            </div>
 
-                snapshot.docs.forEach(doc => { 
-                    const data = doc.data();
-                    const date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString() : 'Hoy';
+            <!-- Columna 2: Ejercicios Personalizados -->
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🧘‍♀️</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">Tu Guía Personal</h3>
+                        <p class="text-xs text-gray-500">Ejercicios creados por IA con voz</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-3 mb-4">
+                    <div class="tooltip" data-tip="Reduce ansiedad un 45%">
+                        <button onclick="selectExercise('respiracion')" class="exercise-btn w-full p-4 bg-gradient-to-r from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 rounded-xl text-left transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl">🌬️</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Respiración Profunda</p>
+                                    <p class="text-xs text-gray-600">5 min • Ansiedad</p>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
                     
-                    const sessionItem = document.createElement('div');
-                    sessionItem.className = 'p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition duration-150';
+                    <div class="tooltip" data-tip="Mejora concentración un 60%">
+                        <button onclick="selectExercise('meditacion')" class="exercise-btn w-full p-4 bg-gradient-to-r from-purple-100 to-purple-200 hover:from-purple-200 hover:to-purple-300 rounded-xl text-left transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl">🧘</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Meditación Mindfulness</p>
+                                    <p class="text-xs text-gray-600">7 min • Concentración</p>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
                     
-                    const techniqueNames = {
-                        "respiración": "Respiración",
-                        "meditación": "Meditación",
-                        "relajación": "Relajación",
-                        "visualización": "Visualización"
-                    };
+                    <div class="tooltip" data-tip="Reduce tensión muscular un 70%">
+                        <button onclick="selectExercise('relajacion')" class="exercise-btn w-full p-4 bg-gradient-to-r from-green-100 to-green-200 hover:from-green-200 hover:to-green-300 rounded-xl text-left transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl">😌</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Relajación Muscular</p>
+                                    <p class="text-xs text-gray-600">10 min • Tensión física</p>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
                     
-                    sessionItem.innerHTML = `
-                        <p class="font-bold text-purple-700">${techniqueNames[data.technique] || data.technique}</p>
-                        <p class="text-xs text-gray-500">${data.duration} min • ${date}</p>
-                    `;
-                    historyList.appendChild(sessionItem);
-                });
-            });
-        }
+                    <div class="tooltip" data-tip="Activa ondas theta del cerebro">
+                        <button onclick="selectExercise('visualizacion')" class="exercise-btn w-full p-4 bg-gradient-to-r from-pink-100 to-pink-200 hover:from-pink-200 hover:to-pink-300 rounded-xl text-left transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl">🌄</span>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Visualización Guiada</p>
+                                    <p class="text-xs text-gray-600">8 min • Calma profunda</p>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                
+                <button id="generate-exercise-btn" class="w-full py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition" disabled>
+                    Generar Mi Guía 🎧
+                </button>
+                
+                <div id="exercise-output" class="mt-4 glass-card p-4 rounded-xl hidden">
+                    <audio id="audio-player" controls class="w-full mb-3"></audio>
+                    <p id="exercise-text" class="text-sm text-gray-700 leading-relaxed"></p>
+                </div>
+                
+                <div id="loading-indicator" class="mt-4 text-center hidden">
+                    <div class="flex items-center justify-center gap-2">
+                        <div class="sound-wave" style="animation-delay: 0s"></div>
+                        <div class="sound-wave" style="animation-delay: 0.2s"></div>
+                        <div class="sound-wave" style="animation-delay: 0.4s"></div>
+                        <div class="sound-wave" style="animation-delay: 0.6s"></div>
+                    </div>
+                    <p class="text-sm text-purple-600 mt-2 font-medium">Creando tu experiencia...</p>
+                </div>
+            </div>
 
-        // ----------------------------------------------------
-        // 8. ASIGNACIÓN DE EVENTOS
-        // ----------------------------------------------------
-        document.getElementById('generate-exercise-btn').addEventListener('click', generateExercise);
-        document.getElementById('save-mood-btn').addEventListener('click', saveMoodEntry);
-        document.getElementById('chat-with-ai-btn').addEventListener('click', chatWithAI);
-        document.getElementById('play-sound-btn').addEventListener('click', () => {
-            if (currentSound) {
-                playAmbientSound(currentSound);
-            } else {
-                alert("Selecciona un sonido primero");
-            }
-        });
-        document.getElementById('stop-sound-btn').addEventListener('click', stopAllSounds);
-        document.getElementById('volume-control').addEventListener('input', (e) => {
-            updateVolume(e.target.value);
-        });
-        document.getElementById('analyze-mood-btn').addEventListener('click', () => {
-            alert("Función de análisis detallado en desarrollo. Próximamente!");
-        });
+            <!-- Columna 3: Sonidos de la Naturaleza -->
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🎵</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">Sonidos Terapéuticos</h3>
+                        <p class="text-xs text-gray-500">Basados en terapia de sonido</p>
+                    </div>
+                </div>
+                
+                <audio id="ambient-audio" loop class="hidden"></audio>
+                
+                <div class="space-y-2 mb-4 max-h-96 overflow-y-auto">
+                    <button onclick="playAmbientSound('rain')" class="w-full p-3 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 rounded-xl text-left transition flex items-center gap-3">
+                        <span class="text-2xl">🌧️</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-sm">Lluvia Suave</p>
+                            <p class="text-xs text-gray-600">Reduce frecuencia cardíaca</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="playAmbientSound('ocean')" class="w-full p-3 bg-gradient-to-r from-cyan-50 to-blue-50 hover:from-cyan-100 hover:to-blue-100 rounded-xl text-left transition flex items-center gap-3">
+                        <span class="text-2xl">🌊</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-sm">Olas del Océano</p>
+                            <p class="text-xs text-gray-600">Induce ondas alfa</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="playAmbientSound('forest')" class="w-full p-3 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 rounded-xl text-left transition flex items-center gap-3">
+                        <span class="text-2xl">🌲</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-sm">Bosque Tranquilo</p>
+                            <p class="text-xs text-gray-600">Efecto Shinrin-yoku</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="playAmbientSound('fireplace')" class="w-full p-3 bg-gradient-to-r from-orange-50 to-red-50 hover:from-orange-100 hover:to-red-100 rounded-xl text-left transition flex items-center gap-3">
+                        <span class="text-2xl">🔥</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-sm">Chimenea</p>
+                            <p class="text-xs text-gray-600">Sensación de calidez</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="playAmbientSound('birds')" class="w-full p-3 bg-gradient-to-r from-yellow-50 to-amber-50 hover:from-yellow-100 hover:to-amber-100 rounded-xl text-left transition flex items-center gap-3">
+                        <span class="text-2xl">🐦</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-sm">Pájaros</p>
+                            <p class="text-xs text-gray-600">Aumenta serotonina</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="playAmbientSound('classical')" class="w-full p-3 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-xl text-left transition flex items-center gap-3">
+                        <span class="text-2xl">🎻</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-sm">Música Clásica</p>
+                            <p class="text-xs text-gray-600">Efecto Mozart</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="playAmbientSound('meditation')" class="w-full p-3 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 rounded-xl text-left transition flex items-center gap-3">
+                        <span class="text-2xl">🧘</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-sm">Meditación</p>
+                            <p class="text-xs text-gray-600">Ondas theta</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="playAmbientSound('tibetan')" class="w-full p-3 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 rounded-xl text-left transition flex items-center gap-3">
+                        <span class="text-2xl">🔔</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-sm">Cuencos Tibetanos</p>
+                            <p class="text-xs text-gray-600">Vibración celular</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="playAmbientSound('piano')" class="w-full p-3 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 rounded-xl text-left transition flex items-center gap-3">
+                        <span class="text-2xl">🎹</span>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800 text-sm">Piano Relajante</p>
+                            <p class="text-xs text-gray-600">Balance emocional</p>
+                        </div>
+                    </button>
+                </div>
+                
+                <button onclick="stopAmbientSound()" class="w-full py-2 bg-red-100 hover:bg-red-200 text-red-700 font-semibold rounded-xl transition mb-3">
+                    ⏹️ Detener
+                </button>
+                
+                <div id="ambient-status" class="text-center text-sm p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl"></div>
+                
+                <div class="mt-3">
+                    <label class="block text-xs font-semibold text-gray-700 mb-2">Volumen</label>
+                    <input type="range" id="volume-slider" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg cursor-pointer">
+                </div>
+            </div>
 
-        // Selección de técnicas
-        document.querySelectorAll('.technique-card').forEach(card => {
-            card.addEventListener('click', () => {
-                // Remover selección anterior
-                document.querySelectorAll('.technique-card').forEach(c => {
-                    c.classList.remove('active-technique', 'border-blue-500', 'bg-blue-100');
-                });
-                
-                // Marcar como activa
-                card.classList.add('active-technique', 'border-blue-500', 'bg-blue-100');
-                
-                // Actualizar técnica actual
-                currentTechnique = card.getAttribute('data-technique');
-                document.getElementById('current-technique').textContent = 
-                    `Técnica: ${currentTechnique.charAt(0).toUpperCase() + currentTechnique.slice(1)}`;
-                
-                playSuccess();
-            });
-        });
+        </div>
 
-        // Selección de duración
-        document.querySelectorAll('.duration-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remover selección anterior
-                document.querySelectorAll('.duration-btn').forEach(b => {
-                    b.classList.remove('bg-blue-500', 'text-white');
-                    b.classList.add('bg-gray-100', 'text-gray-700');
-                });
-                
-                // Marcar como activa
-                btn.classList.remove('bg-gray-100', 'text-gray-700');
-                btn.classList.add('bg-blue-500', 'text-white');
-                
-                // Actualizar duración
-                currentDuration = parseInt(btn.getAttribute('data-minutes'));
-                
-                playSuccess();
-            });
-        });
+        <!-- Segunda Fila: Chat y Tracking -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
 
-        // Selección de sonidos
-        document.querySelectorAll('.sound-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const soundType = card.getAttribute('data-sound');
-                currentSound = soundType;
+            <!-- Chat Empático con IA -->
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-full flex items-center justify-center pulse-soft">
+                        <span class="text-2xl">💬</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-800">Tu Compañero Empático</h3>
+                        <p class="text-xs text-gray-500">Escucha activa sin juicios • 100% privado</p>
+                    </div>
+                </div>
                 
-                // Resaltar selección
-                document.querySelectorAll('.sound-card').forEach(c => {
-                    c.classList.remove('border-blue-500', 'bg-blue-100');
-                });
-                card.classList.add('border-blue-500', 'bg-blue-100');
+                <div class="mb-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl">
+                    <label class="block text-xs font-semibold text-indigo-800 mb-2">Modelo de IA:</label>
+                    <select id="ai-model-select" class="w-full p-2 border border-indigo-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-400">
+                        <option value="openai">🤖 OpenAI (Conversacional)</option>
+                        <option value="deepseek">🧠 DeepSeek (Económico)</option>
+                    </select>
+                </div>
                 
-                document.getElementById('active-sound-name').textContent = 
-                    soundType.charAt(0).toUpperCase() + soundType.slice(1);
+                <div id="openai-instructions" class="mb-3 p-3 bg-green-50 border border-green-200 rounded-xl text-xs">
+                    <p class="font-semibold text-green-800 mb-1">📝 Configura OpenAI:</p>
+                    <a href="https://platform.openai.com/api-keys" target="_blank" class="text-green-700 underline">platform.openai.com/api-keys</a>
+                </div>
                 
-                playSuccess();
-            });
-        });
+                <div id="deepseek-instructions" class="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs hidden">
+                    <p class="font-semibold text-blue-800 mb-1">📝 Configura DeepSeek:</p>
+                    <a href="https://platform.deepseek.com" target="_blank" class="text-blue-700 underline">platform.deepseek.com</a>
+                </div>
+                
+                <div class="mb-4">
+                    <input type="password" id="ai-api-input" placeholder="sk-..." class="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400">
+                    <button id="save-api-key-btn" class="mt-2 w-full py-2 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-semibold rounded-lg text-sm transition">
+                        Activar 🔑
+                    </button>
+                    <p id="api-status" class="text-xs mt-2 font-medium text-center"></p>
+                </div>
+                
+                <div id="chat-container" class="h-72 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 mb-4 space-y-3">
+                    <div class="text-center text-gray-400 text-sm">Configura tu API para comenzar...</div>
+                </div>
 
-        // Seleccionar técnica por defecto
-        document.querySelector('.technique-card[data-technique="respiración"]').click();
-        document.querySelector('.duration-btn[data-minutes="5"]').click();
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Comparte cómo te sientes..." class="flex-1 p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400" disabled>
+                    <button id="send-chat-btn" class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-bold rounded-xl transition disabled:opacity-50" disabled>
+                        Enviar
+                    </button>
+                </div>
+                <div id="chat-loading" class="mt-2 text-center text-sm text-indigo-600 hidden">
+                    <div class="flex items-center justify-center gap-1">
+                        <div class="sound-wave" style="height: 12px"></div>
+                        <div class="sound-wave" style="height: 12px; animation-delay: 0.2s"></div>
+                        <div class="sound-wave" style="height: 12px; animation-delay: 0.4s"></div>
+                    </div>
+                    <span class="text-xs">Escuchando...</span>
+                </div>
+            </div>
 
-    </script>
-</body>
-</html>
+            <!-- Diario Emocional -->
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">📔</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">Diario Emocional</h3>
+                        <p class="text-xs text-gray-500">Monitorea tu bienestar día a día</p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">¿Cómo describes tu día?</label>
+                    <select id="mood-select" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-400">
+                        <option value="Excelente">🥳 Excelente - Me siento increíble</option>
+                        <option value="Bien">😊 Bien - Todo fluye</option>
+                        <option value="Neutral">😐 Neutral - Un día más</option>
+                        <option value="Ansioso">😟 Ansioso - Algo preocupado</option>
+                        <option value="Estresado">😓 Estresado - Mucha presión</option>
+                        <option value="Triste">😔 Tr
