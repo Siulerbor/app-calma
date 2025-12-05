@@ -381,6 +381,32 @@
             30% { transform: translateY(-8px); }
         }
         
+        /* Voice Controls */
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .voice-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .voice-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .voice-btn.active {
+            background: var(--secondary);
+            color: #333;
+        }
+        
         /* Responsive Improvements */
         @media (max-width: 768px) {
             .cycle-counter {
@@ -404,6 +430,34 @@
             .chat-message {
                 max-width: 90%;
             }
+        }
+        
+        /* Neuropsicólogo Styles */
+        .neuro-chat {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        }
+        
+        .neuro-message {
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 3px solid #8b5cf6;
+        }
+        
+        .technique-box {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 8px 0;
+            border-left: 4px solid #10b981;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .emotional-analysis {
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #a7f3d0;
         }
     </style>
 </head>
@@ -550,6 +604,18 @@
                             <button class="meditation-option p-3 rounded-xl border border-gray-200 hover:border-[var(--secondary)] transition click-sound" data-theme="ansiedad">
                                 <i class="fas fa-heart text-[var(--primary)] mr-2"></i>
                                 <span class="font-medium">Ansiedad</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Control de Voz para Meditación -->
+                        <div class="voice-controls mb-4">
+                            <button id="toggle-meditation-voice" class="voice-btn click-sound active">
+                                <i class="fas fa-microphone mr-2"></i>
+                                Voz Masculina Natural
+                            </button>
+                            <button id="test-meditation-voice" class="voice-btn click-sound" style="background: var(--accent);">
+                                <i class="fas fa-volume-up mr-2"></i>
+                                Probar Voz
                             </button>
                         </div>
                         
@@ -779,6 +845,18 @@
                         
                         <p class="text-gray-700 mb-6">Método Wim Hof: 30 respiraciones profundas + retención</p>
                         
+                        <!-- Control de Voz para Respiración -->
+                        <div class="voice-controls mb-4">
+                            <button id="toggle-breathing-voice" class="voice-btn click-sound active">
+                                <i class="fas fa-microphone mr-2"></i>
+                                Voz de Wim Hof Activada
+                            </button>
+                            <button id="test-breathing-voice" class="voice-btn click-sound" style="background: var(--accent);">
+                                <i class="fas fa-volume-up mr-2"></i>
+                                Probar Voz
+                            </button>
+                        </div>
+                        
                         <div class="breathing-balloon-container">
                             <div class="breathing-balloon" id="breathing-balloon">
                                 <div class="balloon-string"></div>
@@ -836,9 +914,9 @@
                         <p class="text-gray-700 mb-6">Cuéntame cómo te sientes. Estoy aquí para escucharte con comprensión y empatía.</p>
                         
                         <!-- Chat Container Mejorado -->
-                        <div class="chat-container mb-4" id="chat-container">
-                            <div class="chat-message assistant-message">
-                                <strong>CalmBot:</strong> ¡Hola! 👋 Soy CalmBot, tu compañero de conversación. Estoy aquí para escucharte, entenderte y acompañarte en tu día. Puedes contarme cómo te sientes, qué te preocupa o simplemente conversar. ¿Cómo ha sido tu día hasta ahora?
+                        <div class="chat-container neuro-chat mb-4" id="chat-container">
+                            <div class="chat-message assistant-message neuro-message">
+                                <strong>Asistente IA:</strong> ¡Hola! 👋 Soy tu asistente de bienestar emocional. Estoy aquí para escucharte, entenderte y acompañarte en tu día. Puedes contarme cómo te sientes, qué te preocupa, qué te gusta hacer, o simplemente conversar. ¿Cómo te sientes hoy?
                             </div>
                         </div>
                         
@@ -846,7 +924,7 @@
                             <label for="user-message" class="block text-sm font-medium text-gray-700 mb-2">
                                 Escribe tu mensaje:
                             </label>
-                            <textarea id="user-message" rows="3" placeholder="Cuéntame cómo te sientes, qué te preocupa, o qué te hace feliz hoy..." class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-400 focus:border-transparent"></textarea>
+                            <textarea id="user-message" rows="3" placeholder="Cuéntame cómo te sientes, qué te preocupa, qué te gusta hacer, o qué te hace feliz..." class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-400 focus:border-transparent"></textarea>
                         </div>
                         
                         <div class="flex justify-between">
@@ -865,13 +943,13 @@
                                 <div class="typing-dot"></div>
                                 <div class="typing-dot"></div>
                                 <div class="typing-dot"></div>
-                                <span class="ml-2 text-gray-600">CalmBot está pensando...</span>
+                                <span class="ml-2 text-gray-600">Asistente está pensando...</span>
                             </div>
                         </div>
                         
                         <div class="mt-4 text-xs text-gray-500">
                             <i class="fas fa-lightbulb mr-1"></i> 
-                            <span id="chat-model-info">Usando modelo de conversación inteligente</span>
+                            <span id="chat-model-info">Chat inteligente con análisis emocional</span>
                         </div>
                     </div>
                 </div>
@@ -906,7 +984,7 @@
             chatHistory: [
                 {
                     role: 'assistant',
-                    content: '¡Hola! 👋 Soy CalmBot, tu compañero de conversación. Estoy aquí para escucharte, entenderte y acompañarte en tu día. Puedes contarme cómo te sientes, qué te preocupa o simplemente conversar. ¿Cómo ha sido tu día hasta ahora?'
+                    content: '¡Hola! 👋 Soy tu asistente de bienestar emocional. Estoy aquí para escucharte, entenderte y acompañarte en tu día. Puedes contarme cómo te sientes, qué te preocupa, qué te gusta hacer, o simplemente conversar. ¿Cómo te sientes hoy?'
                 }
             ],
             ttsActive: false,
@@ -923,7 +1001,11 @@
             currentMeditationDuration: 0,
             stepStartTime: null,
             stepRemainingTime: 0,
-            savedMeditations: []
+            savedMeditations: [],
+            breathingVoiceEnabled: true,
+            meditationVoiceEnabled: true,
+            wimHofVoice: null,
+            meditationMaleVoice: null
         };
 
         // Mood Configuration with colors
@@ -980,6 +1062,8 @@
         let speechSynthesis = window.speechSynthesis;
         let voices = [];
         let currentSpeech = null;
+        let wimHofSpeech = null;
+        let meditationSpeech = null;
 
         // Initialize App
         function initApp() {
@@ -1009,7 +1093,7 @@
             // Initialize calendar
             initJournalCalendar();
             
-            // Load TTS voices with specific female voice
+            // Load TTS voices
             loadTTSVoices();
             
             // Setup event listeners
@@ -1077,34 +1161,44 @@
             localStorage.setItem(`calmapp_${key}`, JSON.stringify(data));
         }
 
-        // Load TTS voices with specific female voice
+        // Load TTS voices with male voice
         function loadTTSVoices() {
             voices = speechSynthesis.getVoices();
             
-            // Try to find a specific female voice for Spanish
-            const preferredVoices = [
-                // Spanish female voices
-                'Microsoft Helena Desktop - Spanish (Spain)',
-                'Google español',
-                'Microsoft Sabina Desktop - Spanish (Mexico)',
-                'Spanish Female',
-                'es-ES-Standard-A', // Google Cloud voices
-                'es-MX-Standard-A'
+            // Find male voice for meditation and Wim Hof
+            const maleVoices = [
+                'Microsoft Pablo Desktop - Spanish (Spain)',
+                'Google español (Spain)',
+                'Spanish Male',
+                'es-ES-Standard-B',
+                'es-MX-Standard-B'
             ];
             
-            // Try to find preferred voices first
-            for (const preferred of preferredVoices) {
-                const voice = voices.find(v => v.name.includes(preferred) || 
-                    (v.lang.includes('es') && v.name.toLowerCase().includes('female')));
+            // Try to find preferred male voice
+            for (const preferred of maleVoices) {
+                const voice = voices.find(v => v.name.includes(preferred));
                 if (voice) {
-                    appState.ttsVoice = voice;
-                    console.log('Voz seleccionada:', voice.name, voice.lang);
-                    return;
+                    appState.meditationMaleVoice = voice;
+                    appState.wimHofVoice = voice;
+                    console.log('Voz masculina seleccionada:', voice.name);
+                    break;
                 }
             }
             
-            // Fallback: any Spanish voice
-            appState.ttsVoice = voices.find(voice => voice.lang.includes('es')) || voices[0];
+            // Fallbacks
+            if (!appState.meditationMaleVoice) {
+                appState.meditationMaleVoice = voices.find(voice => 
+                    voice.lang.includes('es') && 
+                    (voice.name.toLowerCase().includes('male') || voice.name.toLowerCase().includes('hombre'))
+                ) || voices.find(voice => voice.lang.includes('es')) || voices[0];
+            }
+            
+            if (!appState.wimHofVoice) {
+                appState.wimHofVoice = voices.find(voice => 
+                    voice.lang.includes('es') && 
+                    (voice.name.toLowerCase().includes('male') || voice.name.toLowerCase().includes('hombre'))
+                ) || voices.find(voice => voice.lang.includes('es')) || voices[0];
+            }
             
             if (voices.length === 0) {
                 speechSynthesis.onvoiceschanged = () => {
@@ -1114,52 +1208,60 @@
             }
         }
 
-        // Speak text with TTS with feminine, calm voice
-        function speakText(text) {
-            if (appState.ttsActive && currentSpeech) {
-                speechSynthesis.cancel();
+        // Speak text with Wim Hof style voice
+        function speakWimHof(text) {
+            if (!appState.breathingVoiceEnabled) return;
+            
+            if (wimHofSpeech) {
+                speechSynthesis.cancel(wimHofSpeech);
             }
             
             const utterance = new SpeechSynthesisUtterance(text);
             
-            // Configure voice for calm, female guidance
-            if (appState.ttsVoice) {
-                utterance.voice = appState.ttsVoice;
+            if (appState.wimHofVoice) {
+                utterance.voice = appState.wimHofVoice;
             }
             
-            // Optimized settings for meditation guidance
             utterance.lang = 'es-ES';
-            utterance.rate = 0.85; // Slower for calm guidance
-            utterance.pitch = 1.2; // Slightly higher for feminine tone
+            utterance.rate = 0.8;
+            utterance.pitch = 0.9;
             utterance.volume = 1;
             
-            // Event listeners
-            utterance.onstart = () => {
-                appState.ttsActive = true;
-                document.getElementById('stop-voice-btn').classList.remove('hidden');
-            };
-            
-            utterance.onend = () => {
-                appState.ttsActive = false;
-                document.getElementById('stop-voice-btn').classList.add('hidden');
-            };
-            
-            utterance.onerror = () => {
-                appState.ttsActive = false;
-                document.getElementById('stop-voice-btn').classList.add('hidden');
-            };
-            
-            currentSpeech = utterance;
+            wimHofSpeech = utterance;
             speechSynthesis.speak(utterance);
         }
 
-        // Stop TTS
-        function stopTTS() {
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
-                appState.ttsActive = false;
-                document.getElementById('stop-voice-btn').classList.add('hidden');
+        // Speak text with meditation male voice
+        function speakMeditation(text) {
+            if (!appState.meditationVoiceEnabled) return;
+            
+            if (meditationSpeech) {
+                speechSynthesis.cancel(meditationSpeech);
             }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            if (appState.meditationMaleVoice) {
+                utterance.voice = appState.meditationMaleVoice;
+            }
+            
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.85;
+            utterance.pitch = 0.9;
+            utterance.volume = 1;
+            
+            meditationSpeech = utterance;
+            speechSynthesis.speak(utterance);
+        }
+
+        // Stop all TTS
+        function stopAllTTS() {
+            speechSynthesis.cancel();
+            currentSpeech = null;
+            wimHofSpeech = null;
+            meditationSpeech = null;
+            appState.ttsActive = false;
+            document.getElementById('stop-voice-btn').classList.add('hidden');
         }
 
         // Play click sound
@@ -1237,11 +1339,48 @@
             });
             document.getElementById('stop-voice-btn').addEventListener('click', () => {
                 playClickSound();
-                stopTTS();
+                stopAllTTS();
             });
             document.getElementById('restart-guide-btn').addEventListener('click', () => {
                 playClickSound();
                 restartMeditationGuide();
+            });
+            
+            // Voice control buttons
+            document.getElementById('toggle-breathing-voice').addEventListener('click', () => {
+                playClickSound();
+                appState.breathingVoiceEnabled = !appState.breathingVoiceEnabled;
+                const btn = document.getElementById('toggle-breathing-voice');
+                if (appState.breathingVoiceEnabled) {
+                    btn.innerHTML = '<i class="fas fa-microphone mr-2"></i> Voz de Wim Hof Activada';
+                    btn.classList.add('active');
+                } else {
+                    btn.innerHTML = '<i class="fas fa-microphone-slash mr-2"></i> Voz de Wim Hof Desactivada';
+                    btn.classList.remove('active');
+                }
+            });
+            
+            document.getElementById('test-breathing-voice').addEventListener('click', () => {
+                playClickSound();
+                testWimHofVoice();
+            });
+            
+            document.getElementById('toggle-meditation-voice').addEventListener('click', () => {
+                playClickSound();
+                appState.meditationVoiceEnabled = !appState.meditationVoiceEnabled;
+                const btn = document.getElementById('toggle-meditation-voice');
+                if (appState.meditationVoiceEnabled) {
+                    btn.innerHTML = '<i class="fas fa-microphone mr-2"></i> Voz Masculina Natural';
+                    btn.classList.add('active');
+                } else {
+                    btn.innerHTML = '<i class="fas fa-microphone-slash mr-2"></i> Voz Desactivada';
+                    btn.classList.remove('active');
+                }
+            });
+            
+            document.getElementById('test-meditation-voice').addEventListener('click', () => {
+                playClickSound();
+                testMeditationVoice();
             });
             
             // Save meditation button
@@ -1307,6 +1446,32 @@
                     document.getElementById('send-message-btn').click();
                 }
             });
+        }
+
+        // Test Wim Hof voice
+        function testWimHofVoice() {
+            const testTexts = [
+                "Inhala profundamente",
+                "Exhala suavemente",
+                "Mantén la respiración",
+                "Libera todo el aire"
+            ];
+            
+            const randomText = testTexts[Math.floor(Math.random() * testTexts.length)];
+            speakWimHof(randomText);
+        }
+
+        // Test meditation voice
+        function testMeditationVoice() {
+            const testTexts = [
+                "Bienvenido a esta meditación guiada",
+                "Encuentra una posición cómoda",
+                "Cierra suavemente los ojos",
+                "Observa tu respiración"
+            ];
+            
+            const randomText = testTexts[Math.floor(Math.random() * testTexts.length)];
+            speakMeditation(randomText);
         }
 
         // Set active mood with colors
@@ -1423,7 +1588,7 @@
             }, 1500);
         }
 
-        // Generate meditation steps based on theme with complete guidance
+        // Generate meditation steps based on theme
         function generateMeditationSteps(theme) {
             const steps = [];
             
@@ -1431,47 +1596,24 @@
                 case 'respiración':
                     steps.push(
                         { 
-                            text: 'Hola, soy tu guía de meditación. Te acompañaré en este ejercicio de respiración consciente. Comienza encontrando una posición cómoda, ya sea sentado o acostado. Cierra suavemente los ojos y lleva tu atención a este momento presente.', 
-                            duration: '1 minuto 30 segundos',
-                            detailed: true
+                            text: 'Comienza encontrando una posición cómoda, ya sea sentado o acostado. Cierra suavemente los ojos y lleva tu atención a este momento presente.', 
+                            duration: '1 minuto'
                         },
                         { 
-                            text: 'Ahora, vamos a comenzar con la respiración. Empieza a notar tu respiración natural, tal como es en este momento. No la forces, solo observa cómo el aire entra y sale de tu cuerpo. Observa la temperatura del aire al inhalar y al exhalar.', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'INHALA profundamente por la nariz durante 4 segundos. Siente cómo el aire llena tus pulmones.', 
+                            duration: '4 segundos'
                         },
                         { 
-                            text: 'Vamos a practicar la técnica 4-7-8. Primero, inhala profundamente por la nariz durante 4 segundos... Siente cómo el aire llena tus pulmones, expande tu abdomen... 1... 2... 3... 4...', 
-                            duration: '4 segundos',
-                            detailed: true,
-                            countdown: true
+                            text: 'EXHALA lentamente por la boca durante 8 segundos. Libera cualquier tensión o preocupación.', 
+                            duration: '8 segundos'
                         },
                         { 
-                            text: 'Ahora mantén la respiración durante 7 segundos... Permanece en este estado de plenitud... Siente la energía en tu cuerpo... 1... 2... 3... 4... 5... 6... 7...', 
-                            duration: '7 segundos',
-                            detailed: true,
-                            countdown: true
+                            text: 'Repite este ciclo de respiración durante 3 minutos. Con cada exhalación, imagina que liberas estrés.', 
+                            duration: '3 minutos'
                         },
                         { 
-                            text: 'Exhala lentamente por la boca durante 8 segundos... Libera cualquier tensión o preocupación... Deja ir todo lo que no necesitas en este momento... 1... 2... 3... 4... 5... 6... 7... 8...', 
-                            duration: '8 segundos',
-                            detailed: true,
-                            countdown: true
-                        },
-                        { 
-                            text: 'Excelente. Ahora repite este ciclo de 4-7-8 durante 3 minutos. Con cada exhalación, imagina que liberas estrés y ansiedad. Con cada inhalación, imaginas que recibes calma y paz.', 
-                            duration: '3 minutos',
-                            detailed: true
-                        },
-                        { 
-                            text: 'Muy bien. Ahora vuelve a tu respiración natural. Observa cómo te sientes ahora, más calmado y centrado. Toma nota de las sensaciones en tu cuerpo.', 
-                            duration: '1 minuto',
-                            detailed: true
-                        },
-                        { 
-                            text: 'Para finalizar, lleva suavemente tu conciencia de vuelta al presente. Empieza a mover lentamente los dedos de las manos y pies. Cuando estés listo, abre los ojos con calma.', 
-                            duration: '30 segundos',
-                            detailed: true
+                            text: 'Vuelve a tu respiración natural. Observa cómo te sientes ahora, más calmado y centrado.', 
+                            duration: '1 minuto'
                         }
                     );
                     break;
@@ -1479,34 +1621,20 @@
                 case 'relajación':
                     steps.push(
                         { 
-                            text: 'Bienvenido a esta meditación de relajación profunda. Soy tu guía y te acompañaré en este viaje hacia la calma. Siéntate o acuéstate en una posición cómoda. Cierra los ojos y comienza a relajarte.', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'Siéntate o acuéstate en una posición cómoda. Cierra los ojos y comienza a relajarte.', 
+                            duration: '1 minuto'
                         },
                         { 
-                            text: 'Imagina que estás en una playa tranquila al atardecer. Escucha el sonido suave de las olas a lo lejos... El sonido rítmico del mar te invita a relajarte...', 
-                            duration: '2 minutos',
-                            detailed: true
+                            text: 'Imagina que estás en una playa tranquila al atardecer. Escucha el sonido suave de las olas.', 
+                            duration: '2 minutos'
                         },
                         { 
-                            text: 'Siente la brisa suave en tu piel... Nota la calma que te rodea... El aire es fresco y puro... Con cada respiración, te sientes más relajado...', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'Siente la brisa suave en tu piel. Nota la calma que te rodea. Con cada respiración, te sientes más relajado.', 
+                            duration: '2 minutos'
                         },
                         { 
-                            text: 'Con cada ola que llega a la orilla, siente cómo la tension abandona tu cuerpo... Imagina que las preocupaciones se van con el agua que retrocede...', 
-                            duration: '2 minutos',
-                            detailed: true
-                        },
-                        { 
-                            text: 'Permanece en este estado de paz... No hay nada que hacer, solo ser... Eres parte de este momento perfecto...', 
-                            duration: '2 minutos',
-                            detailed: true
-                        },
-                        { 
-                            text: 'Cuando estés listo, comienza a traer lentamente tu conciencia de vuelta... Nota cómo te sientes ahora... Más tranquilo, más sereno...', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'Permanece en este estado de paz. No hay nada que hacer, solo ser.', 
+                            duration: '2 minutos'
                         }
                     );
                     break;
@@ -1514,29 +1642,20 @@
                 case 'concentración':
                     steps.push(
                         { 
-                            text: 'Vamos a practicar una meditación para mejorar la concentración. Siéntate con la espalda recta pero relajada. Fija tu mirada suavemente en un punto frente a ti o cierra los ojos si prefieres.', 
-                            duration: '30 segundos',
-                            detailed: true
+                            text: 'Siéntate con la espalda recta pero relajada. Fija tu mirada suavemente en un punto frente a ti.', 
+                            duration: '30 segundos'
                         },
                         { 
-                            text: 'Comienza a contar tus respiraciones. Inhala... cuenta 1... exhala... cuenta 1... Inhala... cuenta 2... exhala... cuenta 2... Continúa así.', 
-                            duration: '2 minutos',
-                            detailed: true
+                            text: 'Comienza a contar tus respiraciones. Inhala... cuenta 1... exhala... cuenta 2... Continúa así.', 
+                            duration: '2 minutos'
                         },
                         { 
-                            text: 'Si tu mente divaga, amablemente regresa a contar las respiraciones. Sin juicios, solo regresa al conteo. Este es el ejercicio: observar y regresar.', 
-                            duration: '2 minutos',
-                            detailed: true
+                            text: 'Si tu mente divaga, amablemente regresa a contar las respiraciones. Sin juicios, solo regresa al conteo.', 
+                            duration: '2 minutos'
                         },
                         { 
-                            text: 'Continúa hasta 10, luego comienza de nuevo desde 1. Observa cómo tu concentración se fortalece con cada respiración.', 
-                            duration: '2 minutos',
-                            detailed: true
-                        },
-                        { 
-                            text: 'Para finalizar, deja de contar y simplemente observa tu respiración por un momento más. Nota la claridad mental que has cultivado.', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'Para finalizar, deja de contar y simplemente observa tu respiración. Nota la claridad mental.', 
+                            duration: '1 minuto'
                         }
                     );
                     break;
@@ -1544,34 +1663,20 @@
                 case 'ansiedad':
                     steps.push(
                         { 
-                            text: 'Hola, te acompaño en esta meditación para calmar la ansiedad. Primero, reconoce la ansiedad sin luchar contra ella. Di mentalmente: "Estoy sintiendo ansiedad, y está bien".', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'Reconoce la ansiedad sin luchar contra ella. Di mentalmente: "Estoy sintiendo ansiedad, y está bien".', 
+                            duration: '1 minuto'
                         },
                         { 
-                            text: 'Observa dónde sientes la ansiedad en tu cuerpo. ¿Es en el pecho? ¿En el estómago? Solo observa sin juzgar, como si fueras un científico curioso.', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'Observa dónde sientes la ansiedad en tu cuerpo. Solo observa sin juzgar.', 
+                            duration: '1 minuto'
                         },
                         { 
-                            text: 'Coloca ambas manos sobre tu corazón. Siente el calor de tus manos y el latido de tu corazón. Este gesto activa el sistema de calma natural de tu cuerpo.', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'Coloca ambas manos sobre tu corazón. Siente el calor de tus manos y el latido de tu corazón.', 
+                            duration: '1 minuto'
                         },
                         { 
-                            text: 'Con cada exhalación, envía compasión a esa parte de ti que siente ansiedad. Di mentalmente: "Que estés en paz, que estés a salvo".', 
-                            duration: '2 minutos',
-                            detailed: true
-                        },
-                        { 
-                            text: 'Recuerda que las emociones son temporales. Esta ansiedad también pasará. Como las nubes en el cielo, viene y se va.', 
-                            duration: '1 minuto',
-                            detailed: true
-                        },
-                        { 
-                            text: 'Permanece en este espacio de aceptación y cuidado propio. Eres más fuerte de lo que crees.', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'Con cada exhalación, envía compasión a esa parte de ti que siente ansiedad.', 
+                            duration: '2 minutos'
                         }
                     );
                     break;
@@ -1580,23 +1685,19 @@
                     steps.push(
                         { 
                             text: 'Comencemos nuestra meditación. Encuentra una posición cómoda y cierra los ojos.', 
-                            duration: '30 segundos',
-                            detailed: true
+                            duration: '30 segundos'
                         },
                         { 
-                            text: 'Observa tu respiración natural sin intentar cambiarla. Solo sé testigo de cómo tu cuerpo respira por sí mismo.', 
-                            duration: '2 minutos',
-                            detailed: true
+                            text: 'Observa tu respiración natural sin intentar cambiarla. Solo sé testigo de cómo tu cuerpo respira.', 
+                            duration: '2 minutos'
                         },
                         { 
-                            text: 'Si tu mente divaga, amablemente regresa a la respiración. Este es el corazón de la práctica: darse cuenta y regresar.', 
-                            duration: '2 minutos',
-                            detailed: true
+                            text: 'Si tu mente divaga, amablemente regresa a la respiración. Este es el corazón de la práctica.', 
+                            duration: '2 minutos'
                         },
                         { 
-                            text: 'Permanece en este estado de presencia consciente. Eres conciencia pura observando la experiencia.', 
-                            duration: '1 minuto',
-                            detailed: true
+                            text: 'Permanece en este estado de presencia consciente.', 
+                            duration: '1 minuto'
                         }
                     );
             }
@@ -1604,7 +1705,7 @@
             return steps;
         }
 
-        // Start meditation guide with complete guidance
+        // Start meditation guide
         function startMeditationGuide() {
             if (appState.meditationSteps.length === 0) return;
             
@@ -1616,8 +1717,8 @@
             document.getElementById('pause-guide-btn').classList.remove('hidden');
             document.getElementById('meditation-timer').classList.remove('hidden');
             
-            // Start guiding through steps with complete guidance
-            guideNextStepWithCompleteGuidance();
+            // Start guiding through steps
+            guideNextStep();
         }
 
         // Pause meditation guide
@@ -1628,7 +1729,7 @@
             document.getElementById('pause-guide-btn').classList.add('hidden');
             
             // Stop TTS
-            stopTTS();
+            stopAllTTS();
             
             // Clear any active timeouts
             if (appState.guideTimeout) {
@@ -1662,8 +1763,8 @@
             }, 500);
         }
 
-        // Guide through meditation steps with complete guidance
-        function guideNextStepWithCompleteGuidance() {
+        // Guide through meditation steps
+        function guideNextStep() {
             if (!appState.meditationGuideActive || appState.currentStep >= appState.meditationSteps.length) {
                 // Meditation complete
                 completeMeditation();
@@ -1688,79 +1789,22 @@
             // Update timer display
             document.getElementById('current-step-text').textContent = `Paso ${appState.currentStep + 1} de ${appState.meditationSteps.length}`;
             
-            // Speak the step using TTS with feminine voice
-            speakMeditationStep(step, stepDuration);
+            // Speak the step using male voice
+            speakMeditation(step.text);
             
             // Start step timer
-            startStepTimer(stepDuration, step.text);
+            startStepTimer(stepDuration);
             
             // Move to next step after duration
             appState.guideTimeout = setTimeout(() => {
                 appState.currentStep++;
-                guideNextStepWithCompleteGuidance();
-            }, (stepDuration * 1000) + 1000); // Extra second for TTS completion
-        }
-
-        // Speak meditation step with feminine guidance
-        function speakMeditationStep(step, duration) {
-            let textToSpeak = step.text;
-            
-            // Add time guidance for countdown steps
-            if (step.countdown && duration <= 30) {
-                // For short countdown steps, speak each second
-                speakCountdownStep(step, duration);
-                return;
-            }
-            
-            // For longer steps, add time information
-            if (duration > 30) {
-                const minutes = Math.floor(duration / 60);
-                const seconds = duration % 60;
-                let timeInfo = '';
-                
-                if (minutes > 0) {
-                    timeInfo = `Durante ${minutes} minuto${minutes > 1 ? 's' : ''}`;
-                    if (seconds > 0) {
-                        timeInfo += ` y ${seconds} segundo${seconds > 1 ? 's' : ''}`;
-                    }
-                } else {
-                    timeInfo = `Durante ${seconds} segundo${seconds > 1 ? 's' : ''}`;
-                }
-                
-                textToSpeak = `${step.text} ${timeInfo}. Te guiaré durante este tiempo.`;
-            }
-            
-            speakText(textToSpeak);
-        }
-
-        // Speak countdown step with second-by-second guidance
-        function speakCountdownStep(step, duration) {
-            let currentSecond = 1;
-            const stepText = step.text.replace(/\d+\.\.\./g, '').trim();
-            
-            // Speak initial instruction
-            speakText(stepText + ' Comenzamos ahora.');
-            
-            // Start countdown
-            const countdownInterval = setInterval(() => {
-                if (currentSecond <= duration) {
-                    // Speak count at certain intervals
-                    if (currentSecond === 1 || currentSecond === Math.floor(duration/2) || currentSecond === duration) {
-                        speakText(currentSecond.toString());
-                    }
-                    currentSecond++;
-                } else {
-                    clearInterval(countdownInterval);
-                    speakText('Muy bien.');
-                }
-            }, 1000);
-            
-            appState.countdownInterval = countdownInterval;
+                guideNextStep();
+            }, stepDuration * 1000);
         }
 
         // Parse duration string to seconds
         function parseDurationToSeconds(duration) {
-            if (!duration) return 60; // Default 1 minute
+            if (!duration) return 60;
             
             let totalSeconds = 0;
             
@@ -1776,11 +1820,11 @@
                 totalSeconds += parseInt(secondsMatch[1]);
             }
             
-            return totalSeconds || 60; // Default to 60 seconds if parsing fails
+            return totalSeconds || 60;
         }
 
         // Start step timer
-        function startStepTimer(duration, stepText) {
+        function startStepTimer(duration) {
             appState.stepRemainingTime = duration;
             appState.stepStartTime = new Date();
             
@@ -1804,14 +1848,6 @@
             const seconds = appState.stepRemainingTime % 60;
             document.getElementById('timer-display').textContent = 
                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            // Update total meditation timer
-            if (appState.meditationStartTime) {
-                const totalSeconds = Math.floor((new Date() - appState.meditationStartTime) / 1000);
-                const totalMinutes = Math.floor(totalSeconds / 60);
-                const remainingSeconds = totalSeconds % 60;
-                // You could display total time if needed
-            }
         }
 
         // Complete meditation
@@ -1832,8 +1868,8 @@
                 </div>
             `;
             
-            // Speak completion message with feminine voice
-            speakText('Excelente trabajo. Has completado la meditación. Tómate unos momentos para notar cómo te sientes ahora. Observa las sensaciones en tu cuerpo, la calma en tu mente. Cuando estés listo, puedes abrir suavemente los ojos y continuar con tu día llevando esta paz contigo.');
+            // Speak completion message
+            speakMeditation('Excelente trabajo. Has completado la meditación.');
             
             // Hide timer
             document.getElementById('meditation-timer').classList.add('hidden');
@@ -1930,7 +1966,7 @@
             }, 3000);
         }
 
-        // Start Wim Hof breathing with balloon animation
+        // Start Wim Hof breathing with balloon animation and voice
         function startBreathing() {
             if (appState.breathingActive) {
                 stopBreathing();
@@ -1946,8 +1982,13 @@
             document.getElementById('breath-timer').textContent = '4';
             document.getElementById('breath-cycle').textContent = '0';
             
-            // Start breathing cycle with balloon animation
-            breathingCycleWithBalloon();
+            // Speak initial instruction
+            if (appState.breathingVoiceEnabled) {
+                speakWimHof("Comencemos. Método Wim Hof. Inhala profundamente.");
+            }
+            
+            // Start breathing cycle with balloon animation and voice
+            breathingCycleWithBalloonAndVoice();
         }
 
         // Stop breathing
@@ -1956,6 +1997,11 @@
             document.getElementById('start-breathing').innerHTML = '<i class="fas fa-play mr-2"></i> Comenzar';
             document.getElementById('breath-phase').textContent = 'LISTO';
             document.getElementById('breath-timer').textContent = '--';
+            
+            // Stop voice
+            if (wimHofSpeech) {
+                speechSynthesis.cancel(wimHofSpeech);
+            }
             
             // Reset balloon
             const balloon = document.getElementById('breathing-balloon');
@@ -1967,6 +2013,9 @@
             // Clear any active timeouts
             if (appState.breathingTimeout) {
                 clearTimeout(appState.breathingTimeout);
+            }
+            if (appState.countdownInterval) {
+                clearInterval(appState.countdownInterval);
             }
         }
 
@@ -1980,15 +2029,15 @@
             document.getElementById('breath-timer').textContent = '--';
         }
 
-        // Breathing cycle with balloon animation
-        function breathingCycleWithBalloon() {
+        // Breathing cycle with balloon animation and Wim Hof voice
+        function breathingCycleWithBalloonAndVoice() {
             if (!appState.breathingActive) return;
             
             const breathPhase = document.getElementById('breath-phase');
             const breathTimer = document.getElementById('breath-timer');
             const balloon = document.getElementById('breathing-balloon');
             
-            let timer = 4; // 4 seconds for inhale/exhale
+            let timer = 4;
             
             function updateTimer() {
                 if (!appState.breathingActive) return;
@@ -2009,6 +2058,11 @@
                         exhaleSound.currentTime = 0;
                         exhaleSound.play();
                         
+                        // Speak exhale instruction
+                        if (appState.breathingVoiceEnabled) {
+                            speakWimHof("Exhala suavemente");
+                        }
+                        
                         // Animate balloon deflating
                         balloon.classList.remove('inhaling');
                         balloon.classList.add('exhaling');
@@ -2026,6 +2080,11 @@
                             balloon.classList.remove('exhaling');
                             balloon.classList.add('holding');
                             
+                            // Speak retention instruction
+                            if (appState.breathingVoiceEnabled) {
+                                speakWimHof("Retén la respiración");
+                            }
+                            
                             playClickSound();
                             appState.breathingTimeout = setTimeout(() => {
                                 if (appState.breathingActive) {
@@ -2041,11 +2100,18 @@
                                     breathPhase.textContent = 'INHALA FINAL';
                                     breathTimer.textContent = '15';
                                     
+                                    // Speak final instruction
+                                    if (appState.breathingVoiceEnabled) {
+                                        speakWimHof("Inhala profundamente y mantén");
+                                    }
+                                    
                                     appState.breathingTimeout = setTimeout(() => {
                                         stopBreathing();
                                         // Play completion sound
                                         playSuccessSound();
-                                        speakText('Excelente. Has completado la sesión de respiración. Tómate un momento para notar cómo te sientes.');
+                                        if (appState.breathingVoiceEnabled) {
+                                            speakWimHof("Excelente. Sesión completada.");
+                                        }
                                     }, 15000);
                                 }
                             }, 60000);
@@ -2055,6 +2121,11 @@
                         // Play inhale sound
                         inhaleSound.currentTime = 0;
                         inhaleSound.play();
+                        
+                        // Speak inhale instruction
+                        if (appState.breathingVoiceEnabled) {
+                            speakWimHof("Inhala profundamente");
+                        }
                         
                         // Animate balloon inflating
                         balloon.classList.remove('exhaling');
@@ -2245,7 +2316,7 @@
                     // Show more comforting tips
                     tipIndex = (tipIndex + 10) % dailyTips.length;
                 } else if (latestMood === 'excelente' || latestMood === 'bien') {
-                    // Show more uplifting or growth-oriented tips
+                    // Show more uplifting tips
                     tipIndex = (tipIndex + 20) % dailyTips.length;
                 }
             }
@@ -2368,12 +2439,6 @@
                     content: "Tienes varias entradas en tu diario. Esta práctica te ayuda a procesar emociones y ganar claridad.",
                     color: "border-purple-400"
                 });
-            } else if (journalCount > 0) {
-                analysis.push({
-                    title: "📖 Comenzando el Diario",
-                    content: "Has empezado a escribir en tu diario. Intenta hacerlo regularmente para mayores beneficios.",
-                    color: "border-indigo-400"
-                });
             }
             
             // Meditation analysis
@@ -2385,13 +2450,6 @@
                     color: "border-teal-400"
                 });
             }
-            
-            // Detox recommendation
-            analysis.push({
-                title: "📵 Desconexión Digital",
-                content: "Basado en tu actividad, te recomiendo activar el modo desconexión al menos 2 horas al día.",
-                color: "border-orange-400"
-            });
             
             // General recommendation
             analysis.push({
@@ -2422,16 +2480,6 @@
                 meals: document.getElementById('detox-meals').checked
             };
             
-            // Update UI for checked items
-            document.querySelectorAll('.detox-checkbox').forEach(checkbox => {
-                const input = checkbox.querySelector('input');
-                if (input.checked) {
-                    checkbox.classList.add('completed');
-                } else {
-                    checkbox.classList.remove('completed');
-                }
-            });
-            
             // Save detox state
             saveUserData('detox', appState.detoxChecks);
         }
@@ -2442,7 +2490,7 @@
             document.getElementById('detox-screens').checked = appState.detoxChecks.screens;
             document.getElementById('detox-meals').checked = appState.detoxChecks.meals;
             
-            updateDetoxState(); // This will update the UI
+            updateDetoxState();
         }
 
         // Activate detox mode
@@ -2461,19 +2509,6 @@
                 return;
             }
             
-            // Set detox timer
-            const detoxEndTime = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours from now
-            
-            // Save detox session
-            const detoxSession = {
-                commitments: activeCommitments,
-                startTime: new Date().toISOString(),
-                endTime: detoxEndTime.toISOString(),
-                customCommitment: customCommitment
-            };
-            
-            saveUserData('detox_session', detoxSession);
-            
             // Update UI
             document.getElementById('detox-status').innerHTML = `
                 <div class="text-green-600">
@@ -2481,7 +2516,6 @@
                     Modo Desconexión Activado
                 </div>
                 <p class="text-xs mt-1">Compromisos activos: ${activeCommitments.join(', ')}</p>
-                <p class="text-xs">Hasta las ${detoxEndTime.getHours()}:${detoxEndTime.getMinutes().toString().padStart(2, '0')}</p>
             `;
             
             // Clear custom commitment
@@ -2498,7 +2532,6 @@
 
         // Play success sound
         function playSuccessSound() {
-            // Create a pleasant success sound
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator1 = audioContext.createOscillator();
             const oscillator2 = audioContext.createOscillator();
@@ -2641,13 +2674,17 @@
             
             appState.chatHistory.forEach(msg => {
                 const messageDiv = document.createElement('div');
-                messageDiv.className = `chat-message ${msg.role === 'user' ? 'user-message' : 'assistant-message'}`;
-                messageDiv.innerHTML = `<strong>${msg.role === 'user' ? 'Tú' : 'CalmBot'}:</strong> ${msg.content}`;
+                messageDiv.className = `chat-message ${msg.role === 'user' ? 'user-message' : 'assistant-message neuro-message'}`;
+                messageDiv.innerHTML = `<strong>${msg.role === 'user' ? 'Tú' : 'Asistente IA'}:</strong> ${formatMessage(msg.content)}`;
                 chatContainer.appendChild(messageDiv);
             });
             
             // Scroll to bottom
             chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function formatMessage(content) {
+            return content;
         }
 
         async function sendMessage() {
@@ -2677,8 +2714,8 @@
             messageInput.value = '';
             
             try {
-                // Usar un endpoint de IA libre (DeepSeek API u OpenRouter)
-                const response = await getAIResponse(message);
+                // Generate intelligent response
+                const response = await getIntelligentResponse(message);
                 
                 // Add AI response
                 appState.chatHistory.push({
@@ -2717,84 +2754,71 @@
             playSuccessSound();
         }
 
-        async function getAIResponse(message) {
-            try {
-                // Intentar usar OpenRouter (servicio gratuito con límites)
-                // Nota: Necesitarías una API key de OpenRouter
-                const apiKey = 'sk-or-v1-...'; // Aquí deberías poner tu API key de OpenRouter
-                
-                // Para demostración, usaré respuestas simuladas mejoradas
-                return await getSimulatedResponse(message);
-                
-            } catch (error) {
-                throw error; // Re-lanzar para manejo en fallback
-            }
-        }
-
-        async function getSimulatedResponse(message) {
-            // Respuestas simuladas más inteligentes y naturales
+        async function getIntelligentResponse(message) {
+            // Analizar el mensaje
             const lowerMessage = message.toLowerCase();
             
-            // Analizar el estado de ánimo del usuario
-            let moodAnalysis = '';
-            if (lowerMessage.includes('triste') || lowerMessage.includes('deprimido') || lowerMessage.includes('mal')) {
-                moodAnalysis = 'Entiendo que estés pasando por un momento difícil. ';
-            } else if (lowerMessage.includes('feliz') || lowerMessage.includes('contento') || lowerMessage.includes('bien')) {
-                moodAnalysis = 'Me alegra mucho escuchar que te sientes bien. ';
-            } else if (lowerMessage.includes('ansioso') || lowerMessage.includes('nervioso') || lowerMessage.includes('preocupado')) {
-                moodAnalysis = 'Veo que estás experimentando ansiedad, eso es completamente normal. ';
-            } else if (lowerMessage.includes('estresado') || lowerMessage.includes('agobiado')) {
-                moodAnalysis = 'El estrés puede ser abrumador, pero hay formas de manejarlo. ';
+            // Detectar emociones
+            const emotions = detectEmotions(lowerMessage);
+            
+            // Generar respuesta basada en análisis
+            return generateContextualResponse(message, emotions);
+        }
+
+        function detectEmotions(message) {
+            const emotions = [];
+            const emotionKeywords = {
+                'feliz': ['feliz', 'contento', 'alegre', 'emocionado'],
+                'triste': ['triste', 'deprimido', 'desanimado', 'melancólico'],
+                'ansioso': ['ansioso', 'nervioso', 'preocupado', 'agitado'],
+                'estresado': ['estresado', 'agobiado', 'presionado'],
+                'enfadado': ['enfadado', 'enojado', 'frustrado', 'irritado'],
+                'calmado': ['calmado', 'tranquilo', 'relajado', 'pacífico']
+            };
+            
+            for (const [emotion, keywords] of Object.entries(emotionKeywords)) {
+                if (keywords.some(keyword => message.includes(keyword))) {
+                    emotions.push(emotion);
+                }
             }
             
-            // Respuestas basadas en contenido
-            const responses = [
-                `${moodAnalysis}Gracias por compartir eso conmigo. Como tu compañero de bienestar, te sugiero que explores algunas de las herramientas de CalmApp. ¿Has probado la meditación guiada hoy?`,
-                `${moodAnalysis}Escucho lo que dices. A veces, solo poner en palabras lo que sentimos puede aliviar la carga emocional. ¿Te gustaría escribir en tu diario para procesar estos sentimientos?`,
-                `${moodAnalysis}Es importante validar lo que sientes. Recuerda que las emociones son temporales como las nubes en el cielo. ¿Qué actividad te trae paz en este momento?`,
-                `${moodAnalysis}Gracias por confiar en mí con tus pensamientos. Como sugerencia, podrías probar el ejercicio de respiración con el globo. ¿Te apetece intentarlo?`,
-                `${moodAnalysis}Me haces pensar en cómo a veces nos presionamos demasiado. El autocuidado no es egoísta, es necesario. ¿Cómo podrías ser más amable contigo mismo hoy?`,
-                `${moodAnalysis}Aprecio tu honestidad. La autoconciencia es el primer paso hacia el bienestar emocional. ¿Hay algo específico que te gustaría trabajar hoy?`,
-                `${moodAnalysis}Me recuerdas lo importante que es parar y respirar en medio del caos. ¿Te has tomado un momento para ti hoy?`,
-                `${moodAnalysis}Compartir cómo nos sentimos es un acto de valentía. ¿Sabías que escribir sobre emociones negativas puede reducir su intensidad?`,
-                `${moodAnalysis}Veo que estás buscando calma. A veces, simplemente aceptar el momento presente sin juzgarlo puede traer paz. ¿Cómo te suena eso?`,
-                `${moodAnalysis}Tu bienestar emocional es importante. ¿Has considerado establecer una rutina diaria de autocuidado? Podría empezar con solo 5 minutos al día.`
+            return emotions;
+        }
+
+        function generateContextualResponse(message, emotions) {
+            if (emotions.length > 0) {
+                const emotion = emotions[0];
+                const emotionResponses = {
+                    'feliz': `Me alegra mucho que te sientas ${emotion}. ¿Quieres compartir qué está contribuyendo a esta buena energía? Podrías aprovechar este estado para practicar alguna actividad que disfrutes.`,
+                    'triste': `Entiendo que te sientas ${emotion}. La tristeza es una emoción válida y necesaria. ¿Te gustaría hablar más sobre lo que te hace sentir así? Podría sugerirte la meditación para el ánimo bajo.`,
+                    'ansioso': `Veo que estás sintiendo ${emotion}. La ansiedad puede ser abrumadora, pero hay formas de manejarla. ¿Has probado el ejercicio de respiración con el globo? Podría ayudarte a calmarte.`,
+                    'estresado': `El ${emotion} es común en nuestro ritmo de vida. Te sugiero probar la desconexión digital o una meditación de relajación. ¿Qué te está causando más estrés actualmente?`,
+                    'enfadado': `La ${emotion} es una emoción protectora. Identificar qué la desencadena puede ayudar. ¿Quieres explorar eso juntos? Podrías probar escribir en tu diario sobre ello.`,
+                    'calmado': `Qué bien que te sientas ${emotion}. Este es un estado ideal para la práctica de mindfulness. ¿Te gustaría intentar una meditación de concentración?`
+                };
+                
+                if (emotionResponses[emotion]) {
+                    return emotionResponses[emotion];
+                }
+            }
+            
+            // Respuesta general empática
+            const empatheticResponses = [
+                'Gracias por compartir eso conmigo. Me ayuda a entender mejor cómo puedo apoyarte.',
+                'Escucho lo que dices y valido lo que sientes. ¿Hay algo específico en lo que te gustaría que te ayude hoy?',
+                'Me haces reflexionar sobre lo complejas que pueden ser nuestras experiencias emocionales. ¿Quieres seguir explorando esto?',
+                'Aprecio tu confianza al compartir esto. Como asistente de bienestar, te recuerdo que estoy aquí para apoyarte.',
+                'Cada persona tiene su propio ritmo en el camino del bienestar emocional. ¿Cómo sientes que va el tuyo?',
+                'La autocompasión es clave en momentos así. ¿Has sido amable contigo mismo hoy?',
+                'A veces, el simple hecho de ser escuchado puede hacer una gran diferencia. Estoy aquí para eso.',
+                'Tu bienestar emocional es un viaje, no un destino. Celebro cada paso que das.'
             ];
             
-            // Respuestas específicas para preguntas comunes
-            if (lowerMessage.includes('qué hacer') || lowerMessage.includes('consejo')) {
-                return `${moodAnalysis}Basado en lo que compartes, te sugiero: 1) Practicar respiración consciente por 5 minutos, 2) Escribir 3 cosas por las que estés agradecido, 3) Tomar un descanso de pantallas. ¿Qué te parece comenzar con uno de estos?`;
-            }
-            
-            if (lowerMessage.includes('gracias')) {
-                return `Gracias a ti por estar aquí y cuidar de tu bienestar. Me motiva verte comprometido con tu salud emocional. ¿En qué más puedo ayudarte hoy?`;
-            }
-            
-            if (lowerMessage.includes('adiós') || lowerMessage.includes('chao') || lowerMessage.includes('hasta luego')) {
-                return `Ha sido un placer conversar contigo. Recuerda que estoy aquí siempre que necesites hablar. Cuídate mucho y sigue practicando el autocuidado. ¡Hasta pronto! 🌿`;
-            }
-            
-            // Respuesta aleatoria pero inteligente
-            return responses[Math.floor(Math.random() * responses.length)];
+            return empatheticResponses[Math.floor(Math.random() * empatheticResponses.length)];
         }
 
         function getFallbackResponse(message) {
-            // Sistema de respuestas locales más sofisticado
             const lowerMessage = message.toLowerCase();
-            
-            // Detectar palabras clave y responder adecuadamente
-            if (lowerMessage.includes('hola') || lowerMessage.includes('buenos días') || lowerMessage.includes('buenas tardes')) {
-                const greetings = [
-                    '¡Hola de nuevo! ¿Cómo te sientes hoy?',
-                    '¡Qué bueno verte por aquí! ¿Cómo ha sido tu día?',
-                    '¡Hola! Me alegra que estés aquí cuidando de tu bienestar. ¿Qué tal todo?'
-                ];
-                return greetings[Math.floor(Math.random() * greetings.length)];
-            }
-            
-            if (lowerMessage.includes('ayuda') || lowerMessage.includes('qué puedo hacer')) {
-                return `Puedo ayudarte de varias formas: 1) Escuchándote y conversando, 2) Sugiriendo meditaciones guiadas, 3) Acompañándote en ejercicios de respiración, 4) Analizando tu estado de ánimo. ¿Por dónde quieres empezar?`;
-            }
             
             // Respuesta emocionalmente inteligente
             const emotionalWords = {
@@ -2816,14 +2840,11 @@
             
             // Respuesta general empática
             const empatheticResponses = [
-                'Gracias por compartir eso conmigo. Me ayuda a entender mejor cómo puedo apoyarte.',
-                'Escucho lo que dices y valido lo que sientes. ¿Hay algo específico en lo que te gustaría que te ayude hoy?',
-                'Me haces reflexionar sobre lo complejas que pueden ser nuestras experiencias emocionales. ¿Quieres seguir explorando esto?',
-                'Aprecio tu confianza al compartir esto. Como compañero de bienestar, te recuerdo que estoy aquí para apoyarte.',
-                'Cada persona tiene su propio ritmo en el camino del bienestar emocional. ¿Cómo sientes que va el tuyo?',
-                'La autocompasión es clave en momentos así. ¿Has sido amable contigo mismo hoy?',
-                'A veces, el simple hecho de ser escuchado puede hacer una gran diferencia. Estoy aquí para eso.',
-                'Tu bienestar emocional es un viaje, no un destino. Celebro cada paso que das.'
+                'Gracias por compartir eso conmigo. Cada experiencia que compartes me ayuda a entender mejor cómo acompañarte en tu camino de bienestar.',
+                'Valoro tu honestidad al expresar lo que sientes. El autoconocimiento emocional es un paso importante hacia el equilibrio interno.',
+                'Me haces reflexionar sobre la complejidad de nuestras experiencias humanas. ¿Hay algún aspecto específico de lo que compartes que te gustaría explorar más?',
+                'Aprecio que confíes en mí con tus pensamientos. Como tu asistente de bienestar, mi propósito es ofrecerte un espacio seguro para la expresión emocional.',
+                'Cada persona tiene su propio ritmo en el proceso de autodescubrimiento emocional. No hay prisa, solo presencia en el camino.'
             ];
             
             return empatheticResponses[Math.floor(Math.random() * empatheticResponses.length)];
@@ -2833,14 +2854,14 @@
             if (confirm('¿Estás seguro de que quieres limpiar toda la conversación?')) {
                 appState.chatHistory = [{
                     role: 'assistant',
-                    content: '¡Hola! 👋 Soy CalmBot, tu compañero de conversación. Estoy aquí para escucharte, entenderte y acompañarte en tu día. Puedes contarme cómo te sientes, qué te preocupa o simplemente conversar. ¿Cómo ha sido tu día hasta ahora?'
+                    content: '¡Hola! 👋 Soy tu asistente de bienestar emocional. Estoy aquí para escucharte, entenderte y acompañarte en tu día. Puedes contarme cómo te sientes, qué te preocupa, qué te gusta hacer, o simplemente conversar. ¿Cómo te sientes hoy?'
                 }];
                 
                 updateChatDisplay();
                 saveUserData('chat', appState.chatHistory);
                 
                 // Reset model info
-                document.getElementById('chat-model-info').textContent = 'Usando modelo de conversación inteligente';
+                document.getElementById('chat-model-info').textContent = 'Chat inteligente con análisis emocional';
                 
                 playSuccessSound();
             }
