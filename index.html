@@ -216,11 +216,11 @@
         }
         
         .breathing-balloon.exhaling {
-            animation: deflate 4s ease-in-out forwards;
+            animation: deflate 7s ease-in-out forwards;
         }
         
         .breathing-balloon.holding {
-            animation: pulse-hold 2s ease-in-out infinite;
+            animation: pulse-hold 7s ease-in-out infinite;
         }
         
         @keyframes inflate {
@@ -411,6 +411,46 @@
                 transform: scale(1.1); 
                 box-shadow: 0 6px 25px rgba(239, 68, 68, 0.4);
             }
+        }
+        
+        /* Voice Guidance Styles */
+        .voice-guidance {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+        
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .voice-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+        
+        .voice-btn.active {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+        }
+        
+        .voice-status {
+            font-size: 0.9rem;
+            color: #047857;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         /* Responsive Design */
@@ -692,21 +732,13 @@
                             <h2 class="text-2xl font-bold text-gray-800">Respira conmigo 🌬️</h2>
                         </div>
                         
-                        <p class="text-gray-700 mb-6">Método Wim Hof: 30 respiraciones profundas + retención</p>
+                        <p class="text-gray-700 mb-6">Método Wim Hof: 30 respiraciones profundas (4s inhalar / 7s exhalar) + retención</p>
                         
-                        <!-- Reproductor de audio de Wim Hof -->
-                        <div class="audio-player mb-4">
-                            <audio id="wim-hof-audio" controls>
-                                <source src="https://drive.google.com/uc?export=download&id=1A7ktkRUGSxpQOvhnC2RQWVExpuNcUfEK" type="audio/mpeg">
-                                Tu navegador no soporta el elemento de audio.
-                            </audio>
-                        </div>
-                        
-                        <!-- Instrucción -->
+                        <!-- Instrucción mejorada -->
                         <div class="mb-4 p-3 bg-blue-50/70 rounded-lg">
                             <p class="text-sm text-blue-700">
                                 <i class="fas fa-info-circle mr-2"></i>
-                                Haz clic en "Comenzar" para sincronizar el globo con el audio de Wim Hof
+                                La voz guiada te ayudará paso a paso. Relájate y sigue las instrucciones.
                             </p>
                         </div>
                         
@@ -717,6 +749,7 @@
                                 <div class="text-white text-center">
                                     <div id="breath-phase" class="text-2xl font-bold mb-2">LISTO</div>
                                     <div id="breath-timer" class="text-4xl font-bold">--</div>
+                                    <div id="breath-instruction" class="text-sm mt-2"></div>
                                 </div>
                             </div>
                             
@@ -742,8 +775,30 @@
                             </button>
                         </div>
                         
+                        <!-- Guía de voz mejorada -->
+                        <div class="voice-guidance">
+                            <h4 class="font-bold text-gray-800 mb-2">Guía de Voz 🗣️</h4>
+                            <p class="text-sm text-gray-600 mb-3">Voz femenina de OpenAI para guiarte en la técnica</p>
+                            
+                            <div id="voice-status" class="voice-status">
+                                <i class="fas fa-volume-up"></i>
+                                <span id="current-instruction">Presiona "Comenzar" para iniciar</span>
+                            </div>
+                            
+                            <div class="voice-controls">
+                                <button id="toggle-voice" class="voice-btn bg-blue-100 text-blue-700 hover:bg-blue-200">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span>Activar Voz</span>
+                                </button>
+                                <button id="test-voice" class="voice-btn bg-green-100 text-green-700 hover:bg-green-200">
+                                    <i class="fas fa-play"></i>
+                                    <span>Probar Voz</span>
+                                </button>
+                            </div>
+                        </div>
+                        
                         <!-- Ejercicios de Grounding -->
-                        <div class="bg-blue-50/70 p-4 rounded-xl">
+                        <div class="bg-blue-50/70 p-4 rounded-xl mt-4">
                             <h4 class="font-bold text-blue-800 mb-2">Técnica 5-4-3-2-1 (Grounding):</h4>
                             <div id="grounding-exercise" class="space-y-3">
                                 <div class="grounding-step" id="grounding-step-1">
@@ -1063,22 +1118,48 @@
                             </button>
                         </div>
                         
-                        <!-- Líneas de Ayuda -->
+                        <!-- Líneas de Ayuda de CHILE Actualizadas -->
                         <div class="mt-4 p-3 bg-red-50 rounded-lg">
-                            <h4 class="font-bold text-red-800 mb-2">Líneas de Ayuda Internacional:</h4>
-                            <div class="text-sm space-y-1">
-                                <div class="flex justify-between">
-                                    <span>Suicidio: </span>
-                                    <span class="font-bold">988</span>
+                            <h4 class="font-bold text-red-800 mb-2">Líneas de Ayuda Chile 🇨🇱:</h4>
+                            <div class="text-sm space-y-2">
+                                <div class="flex justify-between items-center p-2 bg-white/70 rounded">
+                                    <span class="font-medium text-red-700">Salud Responde</span>
+                                    <span class="font-bold text-red-800">600 360 7777</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span>Crisis: </span>
-                                    <span class="font-bold">911</span>
+                                <div class="flex justify-between items-center p-2 bg-white/70 rounded">
+                                    <span class="font-medium text-red-700">Fono Mayor</span>
+                                    <span class="font-bold text-red-800">800 4000 35</span>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span>Salud Mental: </span>
-                                    <span class="font-bold">1-800-662-HELP</span>
+                                <div class="flex justify-between items-center p-2 bg-white/70 rounded">
+                                    <span class="font-medium text-red-700">Fono Infancia</span>
+                                    <span class="font-bold text-red-800">800 200 818</span>
                                 </div>
+                                <div class="flex justify-between items-center p-2 bg-white/70 rounded">
+                                    <span class="font-medium text-red-700">Fono Drogas</span>
+                                    <span class="font-bold text-red-800">1412</span>
+                                </div>
+                                <div class="flex justify-between items-center p-2 bg-white/70 rounded">
+                                    <span class="font-medium text-red-700">Emergencias Médicas</span>
+                                    <span class="font-bold text-red-800">131</span>
+                                </div>
+                                <div class="flex justify-between items-center p-2 bg-white/70 rounded">
+                                    <span class="font-medium text-red-700">Carabineros</span>
+                                    <span class="font-bold text-red-800">133</span>
+                                </div>
+                                <div class="flex justify-between items-center p-2 bg-white/70 rounded">
+                                    <span class="font-medium text-red-700">Ambulancia</span>
+                                    <span class="font-bold text-red-800">131</span>
+                                </div>
+                                <div class="flex justify-between items-center p-2 bg-white/70 rounded">
+                                    <span class="font-medium text-red-700">Bomberos</span>
+                                    <span class="font-bold text-red-800">132</span>
+                                </div>
+                            </div>
+                            <div class="mt-3 p-2 bg-yellow-50 rounded border border-yellow-200">
+                                <p class="text-xs text-yellow-800">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    <strong>Importante:</strong> En caso de riesgo vital, llama inmediatamente al <strong>131</strong> o acude al servicio de urgencia más cercano.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -1167,7 +1248,6 @@
             sessionTimer: null,
             savedMeditations: [],
             studyParticipation: false,
-            wimHofAudio: null,
             breathInterval: null,
             currentBreathTime: 0,
             sleepQuality: null,
@@ -1182,7 +1262,9 @@
             patterns: [],
             gratitudeEntries: [],
             therapyPrepNotes: '',
-            crisisHistory: []
+            crisisHistory: [],
+            voiceEnabled: true,
+            currentVoiceUtterance: null
         };
 
         // Mood Configuration
@@ -1456,6 +1538,43 @@
             white: "https://assets.mixkit.co/sfx/preview/mixkit-wind-loop-1001.mp3"
         };
 
+        // Text-to-Speech Function
+        function speakText(text, rate = 0.9, pitch = 1.1) {
+            if (!appState.voiceEnabled) return;
+            
+            // Cancel any ongoing speech
+            if (appState.currentVoiceUtterance) {
+                window.speechSynthesis.cancel();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            utterance.rate = rate;
+            utterance.pitch = pitch;
+            
+            // Try to set a female voice
+            const voices = window.speechSynthesis.getVoices();
+            const femaleVoice = voices.find(voice => 
+                voice.lang.includes('es') && 
+                (voice.name.includes('Female') || voice.name.includes('Mujer') || voice.name.includes('woman'))
+            );
+            
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+            
+            utterance.onstart = () => {
+                console.log('Voice started:', text);
+            };
+            
+            utterance.onend = () => {
+                appState.currentVoiceUtterance = null;
+            };
+            
+            appState.currentVoiceUtterance = utterance;
+            window.speechSynthesis.speak(utterance);
+        }
+
         // Initialize App
         function initApp() {
             // Set current date
@@ -1483,6 +1602,13 @@
             
             // Preload sounds
             preloadSounds();
+            
+            // Initialize speech synthesis voices
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = () => {
+                    console.log('Speech synthesis voices loaded');
+                };
+            }
             
             console.log('CalmApp iniciada - Modo Salud Mental Integral');
         }
@@ -1612,6 +1738,10 @@
             document.getElementById('start-breathing').addEventListener('click', startWimHofBreathing);
             document.getElementById('stop-breathing').addEventListener('click', stopWimHofBreathing);
             document.getElementById('reset-breathing').addEventListener('click', resetBreathing);
+            
+            // Voice controls
+            document.getElementById('toggle-voice').addEventListener('click', toggleVoice);
+            document.getElementById('test-voice').addEventListener('click', testVoice);
             
             // Grounding exercise
             document.getElementById('start-grounding').addEventListener('click', startGroundingExercise);
@@ -1933,27 +2063,49 @@
             const balloon = document.getElementById('breathing-balloon');
             const phaseText = document.getElementById('breath-phase');
             const timerText = document.getElementById('breath-timer');
+            const instructionText = document.getElementById('breath-instruction');
             const cycleText = document.getElementById('breath-cycle');
+            const voiceStatus = document.getElementById('current-instruction');
             
             balloon.classList.remove('inhaling', 'exhaling', 'holding');
             
+            // Start voice guidance
+            speakText("Vamos a comenzar la técnica de respiración Wim Hof. Prepara tu postura, siéntate cómodamente con la espalda recta.");
+            
+            setTimeout(() => {
+                if (!appState.breathingActive) return;
+                
+                speakText("Haremos 30 respiraciones profundas. Inhala profundamente por la nariz, exhala suavemente por la boca.");
+                voiceStatus.textContent = "Preparación: Inhala por nariz, exhala por boca";
+                
+                setTimeout(() => breathingCycle(), 4000);
+            }, 4000);
+
             function breathingCycle() {
                 if (!appState.breathingActive) return;
                 
                 if (appState.breathCount < appState.maxBreaths) {
-                    // Inhale phase
+                    // Inhale phase - 4 seconds
                     phaseText.textContent = 'INHALA';
                     timerText.textContent = '4s';
+                    instructionText.textContent = 'Inhala profundamente por la nariz';
+                    voiceStatus.textContent = 'Inhala profundamente...';
                     balloon.classList.add('inhaling');
+                    
+                    speakText("Inhala profundamente");
                     
                     setTimeout(() => {
                         if (!appState.breathingActive) return;
                         
-                        // Exhale phase
+                        // Exhale phase - 7 seconds
                         phaseText.textContent = 'EXHALA';
                         timerText.textContent = '7s';
+                        instructionText.textContent = 'Exhala suavemente por la boca';
+                        voiceStatus.textContent = 'Exhala suavemente...';
                         balloon.classList.remove('inhaling');
                         balloon.classList.add('exhaling');
+                        
+                        speakText("Exhala suavemente");
                         
                         setTimeout(() => {
                             if (!appState.breathingActive) return;
@@ -1963,21 +2115,34 @@
                             
                             balloon.classList.remove('exhaling');
                             
+                            // Update voice status
+                            if (appState.breathCount === 10) {
+                                speakText("Muy bien, ya llevamos 10 respiraciones. Continúa concentrado en tu respiración.");
+                                voiceStatus.textContent = "¡Excelente! 10 respiraciones completadas";
+                            } else if (appState.breathCount === 20) {
+                                speakText("Perfecto, 20 respiraciones. Estás haciendo muy bien. Siente cómo tu cuerpo se relaja.");
+                                voiceStatus.textContent = "¡Increíble! 20 respiraciones completadas";
+                            }
+                            
                             if (appState.breathCount < appState.maxBreaths) {
-                                setTimeout(breathingCycle, 500);
+                                setTimeout(breathingCycle, 1000);
                             } else {
                                 // Retention phase
                                 startRetentionPhase();
                             }
-                        }, 4000); // Shorter exhale for demo
-                    }, 4000);
+                        }, 7000); // 7 seconds exhale
+                    }, 4000); // 4 seconds inhale
                 }
             }
             
             function startRetentionPhase() {
                 phaseText.textContent = 'RETEN';
                 timerText.textContent = '90s';
+                instructionText.textContent = 'Retén la respiración y relájate';
+                voiceStatus.textContent = 'Retén la respiración...';
                 balloon.classList.add('holding');
+                
+                speakText("Ahora retén la respiración. Relaja todo tu cuerpo. Suelta cualquier tensión. Escucha a tu cuerpo.");
                 
                 let retentionTime = 90;
                 const retentionInterval = setInterval(() => {
@@ -1989,6 +2154,18 @@
                     retentionTime--;
                     timerText.textContent = `${retentionTime}s`;
                     
+                    // Voice cues during retention
+                    if (retentionTime === 60) {
+                        speakText("Muy bien, ya pasó medio minuto. Continúa relajado.");
+                        voiceStatus.textContent = "¡Excelente! 30 segundos de retención";
+                    } else if (retentionTime === 30) {
+                        speakText("Perfecto, solo 30 segundos más. Estás haciendo fenomenal.");
+                        voiceStatus.textContent = "¡Fantástico! 60 segundos de retención";
+                    } else if (retentionTime === 15) {
+                        speakText("Casi termina, prepárate para la respiración final.");
+                        voiceStatus.textContent = "Casi termina, prepárate";
+                    }
+                    
                     if (retentionTime <= 0) {
                         clearInterval(retentionInterval);
                         finalBreath();
@@ -1999,12 +2176,20 @@
             function finalBreath() {
                 phaseText.textContent = 'RESP. FINAL';
                 timerText.textContent = '15s';
+                instructionText.textContent = 'Toma una respiración profunda y retén';
+                voiceStatus.textContent = 'Respiración final...';
                 balloon.classList.remove('holding');
+                
+                speakText("Ahora toma una respiración profunda final. Llena completamente tus pulmones. Y retén...");
                 
                 setTimeout(() => {
                     if (appState.breathingActive) {
+                        speakText("Y exhala lentamente. Felicitaciones, has completado la técnica de Wim Hof. Siente la calma en tu cuerpo.");
+                        
                         phaseText.textContent = 'COMPLETADO';
                         timerText.textContent = '🎉';
+                        instructionText.textContent = 'Técnica completada con éxito';
+                        voiceStatus.textContent = "¡Técnica completada! Siente la calma";
                         appState.breathingActive = false;
                         
                         // Update wellness score
@@ -2016,18 +2201,25 @@
                 }, 15000);
             }
             
-            // Start the breathing cycle
-            breathingCycle();
-            showNotification('Iniciando método Wim Hof...', 'info');
+            showNotification('Iniciando método Wim Hof con guía de voz...', 'info');
         }
 
         function stopWimHofBreathing() {
             appState.breathingActive = false;
+            
+            // Stop any speech
+            if (appState.currentVoiceUtterance) {
+                window.speechSynthesis.cancel();
+                appState.currentVoiceUtterance = null;
+            }
+            
             const balloon = document.getElementById('breathing-balloon');
             balloon.classList.remove('inhaling', 'exhaling', 'holding');
             
             document.getElementById('breath-phase').textContent = 'PAUSADO';
             document.getElementById('breath-timer').textContent = '--';
+            document.getElementById('breath-instruction').textContent = '';
+            document.getElementById('current-instruction').textContent = 'Ejercicio detenido';
             
             showNotification('Ejercicio de respiración detenido', 'warning');
         }
@@ -2036,14 +2228,51 @@
             appState.breathingActive = false;
             appState.breathCount = 0;
             
+            // Stop any speech
+            if (appState.currentVoiceUtterance) {
+                window.speechSynthesis.cancel();
+                appState.currentVoiceUtterance = null;
+            }
+            
             const balloon = document.getElementById('breathing-balloon');
             balloon.classList.remove('inhaling', 'exhaling', 'holding');
             
             document.getElementById('breath-phase').textContent = 'LISTO';
             document.getElementById('breath-timer').textContent = '--';
+            document.getElementById('breath-instruction').textContent = '';
             document.getElementById('breath-cycle').textContent = '0';
+            document.getElementById('current-instruction').textContent = 'Presiona "Comenzar" para iniciar';
             
             showNotification('Ejercicio de respiración reiniciado', 'info');
+        }
+
+        function toggleVoice() {
+            appState.voiceEnabled = !appState.voiceEnabled;
+            const voiceBtn = document.getElementById('toggle-voice');
+            
+            if (appState.voiceEnabled) {
+                voiceBtn.innerHTML = '<i class="fas fa-volume-up"></i><span>Desactivar Voz</span>';
+                voiceBtn.classList.remove('bg-blue-100', 'text-blue-700');
+                voiceBtn.classList.add('active');
+                showNotification('Guía de voz activada', 'success');
+                speakText("Guía de voz activada. Te acompañaré en los ejercicios.");
+            } else {
+                voiceBtn.innerHTML = '<i class="fas fa-volume-mute"></i><span>Activar Voz</span>';
+                voiceBtn.classList.remove('active');
+                voiceBtn.classList.add('bg-blue-100', 'text-blue-700');
+                showNotification('Guía de voz desactivada', 'warning');
+                
+                // Stop any ongoing speech
+                if (appState.currentVoiceUtterance) {
+                    window.speechSynthesis.cancel();
+                    appState.currentVoiceUtterance = null;
+                }
+            }
+        }
+
+        function testVoice() {
+            speakText("Hola, soy tu guía de CalmApp. Te acompañaré en los ejercicios de respiración y relajación. Mi voz es suave y clara para ayudarte a concentrarte.");
+            showNotification('Probando guía de voz...', 'info');
         }
 
         function startGroundingExercise() {
@@ -2063,26 +2292,43 @@
                 if (currentStep < steps.length) {
                     steps[currentStep].classList.add('active');
                     
-                    // Show notification for each step
+                    // Show notification and voice guidance for each step
                     const stepText = steps[currentStep].querySelector('span').textContent;
                     showNotification(`Grounding: ${stepText}`, 'info');
+                    
+                    if (appState.voiceEnabled) {
+                        speakText(stepText);
+                    }
                     
                     currentStep++;
                     
                     if (currentStep <= steps.length) {
                         setTimeout(nextStep, 30000); // 30 seconds per step
                     } else {
+                        if (appState.voiceEnabled) {
+                            speakText("Excelente, has completado el ejercicio de grounding. Siente cómo estás más presente y conectado con el momento actual.");
+                        }
                         showNotification('Ejercicio de Grounding completado', 'success');
                     }
                 }
             }
             
             showNotification('Iniciando técnica 5-4-3-2-1 para Grounding...', 'info');
-            nextStep();
+            
+            if (appState.voiceEnabled) {
+                speakText("Vamos a comenzar el ejercicio de grounding 5-4-3-2-1. Este ejercicio te ayudará a conectar con el presente. Tómate tu tiempo en cada paso.");
+                setTimeout(nextStep, 4000);
+            } else {
+                nextStep();
+            }
         }
 
         function startBreathingExercise() {
             showNotification('Iniciando ejercicio de respiración 4-7-8...', 'info');
+            
+            if (appState.voiceEnabled) {
+                speakText("Vamos a practicar la respiración 4-7-8. Es una técnica excelente para calmar la ansiedad. Sigue mis instrucciones.");
+            }
             
             // Simple 4-7-8 breathing
             let cycle = 0;
@@ -2090,18 +2336,30 @@
             
             function breathingCycle() {
                 if (cycle < maxCycles) {
+                    if (appState.voiceEnabled) {
+                        speakText(`Ciclo ${cycle + 1} de ${maxCycles}. Inhala por 4 segundos...`);
+                    }
                     showNotification(`Ciclo ${cycle + 1}/${maxCycles}: Inhala (4s)...`, 'info');
                     
                     setTimeout(() => {
+                        if (appState.voiceEnabled) {
+                            speakText("Retén la respiración por 7 segundos...");
+                        }
                         showNotification(`Ciclo ${cycle + 1}/${maxCycles}: Retén (7s)...`, 'info');
                         
                         setTimeout(() => {
+                            if (appState.voiceEnabled) {
+                                speakText("Exhala por 8 segundos...");
+                            }
                             showNotification(`Ciclo ${cycle + 1}/${maxCycles}: Exhala (8s)...`, 'info');
                             
                             cycle++;
                             if (cycle < maxCycles) {
                                 setTimeout(breathingCycle, 9000); // 8s exhale + 1s pause
                             } else {
+                                if (appState.voiceEnabled) {
+                                    speakText("¡Perfecto! Has completado la respiración 4-7-8. Siente la calma en tu cuerpo.");
+                                }
                                 showNotification('Ejercicio de respiración completado', 'success');
                             }
                         }, 7000);
